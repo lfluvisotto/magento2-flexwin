@@ -6,14 +6,14 @@ Dibs Flexwin module for Magento 2 for D2 merchants
 
 Install
 =======
-With composer:
+1.With composer:
 
-  composer require dibs/module-payment-flexwin
+composer require dibs/module-payment-flexwin
 
-Or just clone repository, create folder 
+2. Or just clone repository, create folder 
 
-  app/code/Dibs/Flexwin and place modules files here
+app/code/Dibs/Flexwin and place modules files here
 
-in Magento root folder 
+3. in Magento root folder 
 
   php bin/magento module:enable Dibs_Flexwin
