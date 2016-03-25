@@ -1,0 +1,38 @@
+<div class="payment-method" data-bind="css: {'_active': ( $parent.getMethodCode() == $parent.isChecked() && $parent.getDibsPaytype() == $data.id)}, enable: ($parent.customMethodDisabled())">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': $data.id}, value: $data.id, checked: $parent.getDibsPaytype(), click: $parent.setCustomPaymentMethod.bind($parent), visible: $parent.isRadioButtonVisible()"/>
+        <label data-bind="attr: {'for': $data.id}" class="label">
+            <img width="125" data-bind="attr: {src: $parent.imgUrl($data.imgNumber)}"
+                 class="payment-icon"/>
+            <span data-bind="text: $data.title"></span>
+        </label>
+    </div>
+    <div class="payment-method-content">
+        <div class="checkout-agreements-block">
+            <span data-bind="i18n: 'You will be redirected to DIBS payment window..'"></span>
+        </div>
+        <form id="payment-form-dibs" data-bind="foreach: $parent.requestData, attr: {action : $parent.getDibsActionFormUrl() }" method="POST">
+          <input type="hidden" data-bind="attr: {'name': $data.name, 'value': $data.value }"/>
+        </form>
+        
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button class="action primary checkout"
+                        type="submit"
+                        data-bind="
+                        click: $parent.placeOrder.bind($parent),
+                        attr: {title: $t('Place Order')},
+                        enable: ($parent.getMethodCode() == $parent.isChecked() && $parent.getDibsPaytype() == $data.id),
+                        css: {disabled: !$parent.isPlaceOrderActionAllowed()}
+                        "
+                        disabled>
+                    <span data-bind="i18n: 'Place Order'"></span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

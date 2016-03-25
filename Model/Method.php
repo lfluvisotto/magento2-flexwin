@@ -1,0 +1,230 @@
+<?php
+
+namespace Dibs\Flexwin\Model;
+
+use Magento\Payment\Helper\Data as PaymentHelper;
+
+ class Method {
+    
+    protected $quote;
+    protected $urlInterface;
+    protected $paymentHelper;
+    protected $_checkoutSession;
+    protected $_quote = false;
+    protected $methodObj;
+    protected $request;
+    protected $order;
+    protected $orderSender;
+    
+    const KEY_CURRENCY_NAME    = 'currency';
+    const KEY_MERCHANT_NAME    = 'merchant';
+    const KEY_AMOUNT_NAME      = 'amount';
+    const KEY_ACCEPTURL_NAME   = 'accepturl';
+    const KEY_CANCELURL_NAME   = 'cancelurl';
+    const KEY_PAYTYPE_NAME     = 'paytype';
+    const KEY_CALLBACKURL_NAME = 'callbackurl';
+    const KEY_ORDERID_NAME     = 'orderid';
+    const KEY_DECORATOR_NAME   = 'decorator';
+    const KEY_LANG_NAME        = 'lang';
+    const KEY_TESTMODE_NAME    = 'testmode';
+    const KEY_MD5KEY_NAME      = 'md5key';
+    const KEY_CAPTURENOW_NAME  = 'capturenow';
+    const KEY_MD5_KEY1_NAME    = 'md5key1';
+    const KEY_MD5_KEY2_NAME    = 'md5key2';
+    
+    
+    const RETURN_CONTEXT_ACCEPT   = 'accept';
+    const RETURN_CONTEXT_CALLBACK = 'callback';
+    
+    // choose status that you need
+    const ORDER_SATATUS_AFTER_PAYMENT = \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW;
+ 
+    public function __construct(\Magento\Quote\Model\Quote $quote, 
+                \Magento\Framework\UrlInterface $urlInterface,  
+                 PaymentHelper $paymentHelper,   
+                \Magento\Checkout\Model\Session $checkoutSession,
+                \Magento\Framework\App\Request\Http $request,
+                \Magento\Sales\Model\Order $order,
+                \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
+
+          ) {
+                $this->quote = $quote;
+                $this->urlInterface = $urlInterface;
+                $this->paymentHelper = $paymentHelper;
+                $this->_checkoutSession = $checkoutSession;
+                $this->methodObj = $this->paymentHelper->getMethodInstance(ConfigProvider::METHOD_CODE);
+                $this->request = $request;
+                $this->order = $order;
+                $this->orderSender = $orderSender;
+    }
+    
+    /**
+     * Collect params that will be 
+     * sended to DIBS Payment gateway
+     * 
+     * @return array 
+     */
+    public function collectRequestParams() {
+        $order = $this->order->load($this->request->getParam(self::KEY_ORDERID_NAME));
+        
+        if($order->getId()) {
+            $orderId = $order->getIncrementId();
+            $quote = $this->quote->loadByIdWithoutStore($order->getQuoteId());
+            $this->_quote = $quote;
+            
+            $requestParams['result'] = 'success';
+            $requestParams['params'] = array(self::KEY_MERCHANT_NAME    => trim($this->methodObj->getConfigData(self::KEY_MERCHANT_NAME)),
+                                   self::KEY_ORDERID_NAME     => $orderId,
+                                   self::KEY_CURRENCY_NAME    => $this->_quote->getBaseCurrencyCode(),
+                                   self::KEY_AMOUNT_NAME      => $this->api_dibs_round($this->_quote->getGrandTotal()),
+                                   self::KEY_ACCEPTURL_NAME   => $this->urlInterface->getDirectUrl('dibsflexwin/index/accept'),
+                                   self::KEY_CANCELURL_NAME   => $this->urlInterface->getDirectUrl('dibsflexwin/index/cancel'),
+                                   self::KEY_PAYTYPE_NAME     => $this->request->getParam(self::KEY_PAYTYPE_NAME),
+                                   self::KEY_CALLBACKURL_NAME => $this->urlInterface->getDirectUrl('dibsflexwin/index/callback')
+            );
+
+            if($this->methodObj->getConfigData(self::KEY_TESTMODE_NAME) == '1') {
+                $requestParams['params']['test'] = 1;
+            }
+            if($this->methodObj->getConfigData(self::KEY_DECORATOR_NAME)) {
+                $requestParams['params'][self::KEY_DECORATOR_NAME] = $this->methodObj->getConfigData(self::KEY_DECORATOR_NAME);
+            }
+            if($this->methodObj->getConfigData(self::KEY_LANG_NAME)) {
+                $requestParams['params'][self::KEY_LANG_NAME] = $this->methodObj->getConfigData(self::KEY_LANG_NAME);
+            }
+
+            $macCodeParams = array(self::KEY_MERCHANT_NAME => $requestParams['params'][self::KEY_MERCHANT_NAME],
+                                   self::KEY_ORDERID_NAME  => $requestParams['params'][self::KEY_ORDERID_NAME],
+                                   self::KEY_CURRENCY_NAME => $requestParams['params'][self::KEY_CURRENCY_NAME],
+                                   self::KEY_AMOUNT_NAME   => $requestParams['params'][self::KEY_AMOUNT_NAME]);
+
+            if($md5Key = $this->calcMd5Code($macCodeParams)) {
+               $requestParams['params'][self::KEY_MD5KEY_NAME] = $md5Key;
+            }
+
+            if($this->methodObj->getConfigData(self::KEY_CAPTURENOW_NAME) == '1') {
+               $requestParams['params'][self::KEY_CAPTURENOW_NAME] = 1;
+            }
+        } else {
+             $requestParams['result'] = 'error';
+             $requestParams['message']= 'error occured';
+        }
+        
+        return $requestParams;
+    }
+    
+    /**
+     * Calculate md5key from given params
+     * 
+     * @param type $params
+     * @return String
+     */
+    protected function calcMd5Code($params) {
+      $md5key = '';
+      if($this->checkMd5KeyCodeRequired()) {
+           $key1 = trim($this->methodObj->getConfigData(self::KEY_MD5_KEY1_NAME));
+           $key2 = trim($this->methodObj->getConfigData(self::KEY_MD5_KEY2_NAME));
+           $parameter_string = '';
+           $parameter_string .=     self::KEY_MERCHANT_NAME.'=' . $params[self::KEY_MERCHANT_NAME];
+           $parameter_string .= '&'.self::KEY_ORDERID_NAME .'=' . $params[self::KEY_ORDERID_NAME];
+           $parameter_string .= '&'.self::KEY_CURRENCY_NAME.'=' . $params[self::KEY_CURRENCY_NAME];
+           $parameter_string .= '&'.self::KEY_AMOUNT_NAME  .'=' . $params[self::KEY_AMOUNT_NAME];
+           $md5key = md5($key2 . md5($key1 . $parameter_string) );
+      }
+      return $md5key;
+   }
+   
+   /**
+    * Set returned params to order for 
+    * success return and callback, add 
+    * comment for order for successreturn/callback cases
+    * 
+    * 
+    * @param type $context
+    * @return $order
+    */
+   protected function setReturnedParamsToOrder($context = self::RETURN_CONTEXT_ACCEPT) {
+        $orderComment = '';
+        if($context == self::RETURN_CONTEXT_ACCEPT) {
+            $orderComment = __('Customer successfully returned from DIBS');
+        }
+        if($context == self::RETURN_CONTEXT_CALLBACK) {
+            $orderComment = __('Callback was received from DIBS');
+        }
+        $orderIncrementId = $this->request->getParam(self::KEY_ORDERID_NAME);  
+        $order = $this->order->loadByIncrementId($orderIncrementId);
+        $transactId = $this->request->getParam('transact');  
+        if($order->getId()) {
+            $order->addStatusHistoryComment($orderComment);
+            $order->save();
+            $payment = $order->getPayment();
+            $payment->setLastTransId($transactId);
+            $payment->save();
+            
+        }
+        return $order;
+    }
+    
+    /**
+     * Complete checkout and set new status to order 
+     * \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW;
+     * Send Email comfirmation 
+     * @param type $context
+     * @return type
+     */
+    public function completeCheckout($context = self::RETURN_CONTEXT_ACCEPT) {
+        if( $this->checkMd5KeyCodeRequired() ) {
+            
+            $returedParams = array(self::KEY_MERCHANT_NAME => $this->request->getParam(self::KEY_MERCHANT_NAME),
+                                   self::KEY_ORDERID_NAME  => $this->request->getParam(self::KEY_ORDERID_NAME),
+                                   self::KEY_CURRENCY_NAME => $this->request->getParam(self::KEY_CURRENCY_NAME),
+                                   self::KEY_AMOUNT_NAME   => $this->request->getParam(self::KEY_AMOUNT_NAME),
+                                   self::KEY_MD5KEY_NAME   => $this->request->getParam(self::KEY_MD5KEY_NAME),
+                                   );
+            
+            if( !$this->checkMacCode($returedParams) ) {
+                // add logging of fail mac code
+              
+                return;
+            } 
+        }
+        
+        $order = $this->setReturnedParamsToOrder($context);
+        if(!$order->getEmailSent()) {
+            $this->orderSender->send($order);
+        }
+        $order->setState(self::ORDER_SATATUS_AFTER_PAYMENT);
+        $order->setStatus(self::ORDER_SATATUS_AFTER_PAYMENT);
+        $order->setIsNotified(false);
+        $order->save();
+    } 
+    
+    public static function api_dibs_round($fNum, $iPrec = 2) {
+        return empty($fNum) ? (int)0 : (int)(string)(round($fNum, $iPrec) * pow(10, $iPrec));
+    }
+    
+    protected function checkMacCode($returedParams = array()) {
+         if($returedParams && isset($returedParams[self::KEY_MD5KEY_NAME])) {
+                if($this->calcMd5Code($returedParams) == $returedParams[self::KEY_MD5KEY_NAME]) {
+                    return true;
+                } else {
+                    return false;
+                }
+          } else {
+              return false;
+          }
+    }
+    
+    /**
+     * Check if we have to check md5key only 
+     * in case if we set up md5key1 md5key2 in admin
+     * 
+     * @return bool
+     */
+    protected function checkMd5KeyCodeRequired() {
+         return trim($this->methodObj->getConfigData(self::KEY_MD5_KEY1_NAME)) && 
+                trim($this->methodObj->getConfigData(self::KEY_MD5_KEY2_NAME)) ? true : false;
+        
+    }
+   
+}
