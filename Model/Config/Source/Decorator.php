@@ -12,7 +12,7 @@ class Decorator implements \Magento\Framework\Option\ArrayInterface
     public function toOptionArray()
     {
         return [
-                ['value' => '',   'label' => __('Choose decorator...')], 
+                ['value' => '',   'label' => __('-- Please Select --')], 
                 ['value' => 'default', 'label' => __('Default')], 
                 ['value' => 'basal', 'label' => __('Basal')],
                 ['value' => 'rich', 'label' => __('Rich')],

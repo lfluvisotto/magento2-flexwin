@@ -36,9 +36,6 @@ use Magento\Payment\Helper\Data as PaymentHelper;
     const RETURN_CONTEXT_ACCEPT   = 'accept';
     const RETURN_CONTEXT_CALLBACK = 'callback';
     
-    // choose status that you need
-    const ORDER_SATATUS_AFTER_PAYMENT = \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW;
- 
     public function __construct(\Magento\Quote\Model\Quote $quote, 
                 \Magento\Framework\UrlInterface $urlInterface,  
                  PaymentHelper $paymentHelper,   
@@ -46,7 +43,7 @@ use Magento\Payment\Helper\Data as PaymentHelper;
                 \Magento\Framework\App\Request\Http $request,
                 \Magento\Sales\Model\Order $order,
                 \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
-
+      
           ) {
                 $this->quote = $quote;
                 $this->urlInterface = $urlInterface;
@@ -69,6 +66,9 @@ use Magento\Payment\Helper\Data as PaymentHelper;
         
         if($order->getId()) {
             $orderId = $order->getIncrementId();
+            $order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
+            $this->setCustomOrderStatus('order_status_pending');
+            $order->save();
             $quote = $this->quote->loadByIdWithoutStore($order->getQuoteId());
             $this->_quote = $quote;
             
@@ -92,7 +92,6 @@ use Magento\Payment\Helper\Data as PaymentHelper;
             if($this->methodObj->getConfigData(self::KEY_LANG_NAME)) {
                 $requestParams['params'][self::KEY_LANG_NAME] = $this->methodObj->getConfigData(self::KEY_LANG_NAME);
             }
-
             $macCodeParams = array(self::KEY_MERCHANT_NAME => $requestParams['params'][self::KEY_MERCHANT_NAME],
                                    self::KEY_ORDERID_NAME  => $requestParams['params'][self::KEY_ORDERID_NAME],
                                    self::KEY_CURRENCY_NAME => $requestParams['params'][self::KEY_CURRENCY_NAME],
@@ -101,10 +100,11 @@ use Magento\Payment\Helper\Data as PaymentHelper;
             if($md5Key = $this->calcMd5Code($macCodeParams)) {
                $requestParams['params'][self::KEY_MD5KEY_NAME] = $md5Key;
             }
-
+            
             if($this->methodObj->getConfigData(self::KEY_CAPTURENOW_NAME) == '1') {
                $requestParams['params'][self::KEY_CAPTURENOW_NAME] = 1;
             }
+            
         } else {
              $requestParams['result'] = 'error';
              $requestParams['message']= 'error occured';
@@ -174,7 +174,6 @@ use Magento\Payment\Helper\Data as PaymentHelper;
      */
     public function completeCheckout($context = self::RETURN_CONTEXT_ACCEPT) {
         if( $this->checkMd5KeyCodeRequired() ) {
-            
             $returedParams = array(self::KEY_MERCHANT_NAME => $this->request->getParam(self::KEY_MERCHANT_NAME),
                                    self::KEY_ORDERID_NAME  => $this->request->getParam(self::KEY_ORDERID_NAME),
                                    self::KEY_CURRENCY_NAME => $this->request->getParam(self::KEY_CURRENCY_NAME),
@@ -184,17 +183,19 @@ use Magento\Payment\Helper\Data as PaymentHelper;
             
             if( !$this->checkMacCode($returedParams) ) {
                 // add logging of fail mac code
-              
+         
                 return;
             } 
         }
-        
+         
         $order = $this->setReturnedParamsToOrder($context);
+        
         if(!$order->getEmailSent()) {
             $this->orderSender->send($order);
         }
-        $order->setState(self::ORDER_SATATUS_AFTER_PAYMENT);
-        $order->setStatus(self::ORDER_SATATUS_AFTER_PAYMENT);
+        $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
+        $this->setCustomOrderStatus('order_status');
+          
         $order->setIsNotified(false);
         $order->save();
     } 
@@ -215,6 +216,27 @@ use Magento\Payment\Helper\Data as PaymentHelper;
           }
     }
     
+    
+    public function setOrderCancelled($orderid) {
+       $order = $this->order->loadByIncrementId($orderid);
+       if($order->getId()) {
+           $order->setState(\Magento\Sales\Model\Order::STATE_CANCELED);
+           $this->setCustomOrderStatus('order_status_cancel');
+           $order->addStatusHistoryComment(__('Customer has cancelled payment'));
+           $order->save();
+       }
+       
+    }
+    
+    public function restoreQuoteFromOrder($orderid) {
+        $order = $this->order->loadByIncrementId($orderid);
+        if($order->getId()) {
+            $quote = $this->quote->loadByIdWithoutStore($order->getQuoteId());
+            $quote->setIsActive(1)->setReservedOrderId(NULL)->save();
+            $this->_checkoutSession->replaceQuote($quote);
+        }
+    }
+    
     /**
      * Check if we have to check md5key only 
      * in case if we set up md5key1 md5key2 in admin
@@ -225,6 +247,22 @@ use Magento\Payment\Helper\Data as PaymentHelper;
          return trim($this->methodObj->getConfigData(self::KEY_MD5_KEY1_NAME)) && 
                 trim($this->methodObj->getConfigData(self::KEY_MD5_KEY2_NAME)) ? true : false;
         
+    }
+    
+    /**
+     * Set custom order staus for DIBS for states:
+     *  pending_payment, processing, cancelled
+     * 
+     * @param string $statusConfName
+     * @return type
+     */
+    
+    protected function setCustomOrderStatus($statusConfName) {
+          $orderStatus = $orderStatusCancel = $this->methodObj->getConfigData($statusConfName);
+            if($orderStatus) {
+                $this->order->setStatus($orderStatus);
+            }
+         
     }
    
 }

@@ -44,7 +44,7 @@ define(
                 function (data) {
                     $.ajax({
                       method: "POST",
-                      url: window.checkoutConfig.payment.dibsFlexwin.getParamsUrl,
+                      url: window.checkoutConfig.payment.dibsFlexwin.getPlaceOrderUrl,
                       data: { paytype: method, 
                               cartid: quote.getQuoteId(), 
                               orderid: data

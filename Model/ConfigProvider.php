@@ -10,8 +10,6 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface 
     
     protected $urlInterface;
     
-    const FORM_ACTION_URL = "https://payment.architrade.com/paymentweb/start.action";
-    
     const METHOD_CODE = 'dibs_flexwin';
     
     /**
@@ -23,24 +21,30 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface 
         PaymentHelper $paymentHelper,
         Escaper $escaper,
         \Magento\Framework\UrlInterface $urlInterface
+        
     ) {
         $this->escaper = $escaper;
         $this->method = $paymentHelper->getMethodInstance(self::METHOD_CODE);
         $this->urlInterface = $urlInterface;
+       
     }
     
     public function getConfig() {
           $config = [
             'payment' => [
-                'dibsFlexwin' => [
-                    'visa'   => $this->method->getConfigData('card_visa'),
-                    'master' => $this->method->getConfigData('card_master'),
-                    'amex'   => $this->method->getConfigData('card_amex'),
-                    'diners'   => $this->method->getConfigData('card_diners'),
-                    'dankort'   => $this->method->getConfigData('card_dankort'),
-                    'getParamsUrl' => $this->urlInterface->getDirectUrl('dibsflexwin/index/request'),
-                    'formActionUrl' => self::FORM_ACTION_URL
-                    
+                'dibsFlexwin'           => [
+                    'paytype' => [
+                       'visa'              => $this->method->getConfigData('card_visa'),
+                       'master'            => $this->method->getConfigData('card_master'),
+                       'amex'              => $this->method->getConfigData('card_amex'),
+                       'diners'            => $this->method->getConfigData('card_diners'),
+                       'dankort'           => $this->method->getConfigData('card_dankort'),
+                       'mobilepay'         => $this->method->getConfigData('mobilepay'),
+                    ],
+                    'getPlaceOrderUrl'  => $this->urlInterface->getDirectUrl($this->method->getConfigData('place_order_url')),
+                    'formActionUrl'     => $this->method->getConfigData('form_action_url'),
+                    'cdnUrlLogoPrefix'  => $this->method->getConfigData('cdn_url_logo_prefix'),
+                    'logoWith'          => $this->method->getConfigData('logo_with')
                 ]
             ]
         ];

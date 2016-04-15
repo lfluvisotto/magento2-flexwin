@@ -12,7 +12,7 @@ class Language implements \Magento\Framework\Option\ArrayInterface
     public function toOptionArray()
     {
         return [
-               ['value' => '',   'label' => __('Choose language...')], 
+               ['value' => '',   'label' => __('-- Please Select --')], 
                 ['value' => 'da', 'label' => __('Danish')], 
                 ['value' => 'en', 'label' => __('English')],
                 ['value' => 'de', 'label' => __('German')],

@@ -8,7 +8,11 @@
             <is_gateway>1</is_gateway>
             <can_order>1</can_order>
             <can_use_checkout>1</can_use_checkout>
-        </dibs_flexwin>
+            <form_action_url>https://payment.architrade.com/paymentweb/start.action</form_action_url>
+            <place_order_url>dibsflexwin/index/request</place_order_url>
+            <cdn_url_logo_prefix>https://cdn.dibspayment.com/logo/checkout/single/horiz/DIBS_checkout_single_</cdn_url_logo_prefix>
+            <logo_with>125</logo_with>
+         </dibs_flexwin>
     </payment>
 </default>
 </config>

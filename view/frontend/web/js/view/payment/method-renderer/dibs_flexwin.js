@@ -18,7 +18,8 @@ define(
             
             defaults: {
                 template: 'Dibs_Flexwin/payment/dibs_flexwin',
-                requestData : []
+                requestData : [],
+                imgWidth    : window.checkoutConfig.payment.dibsFlexwin.logoWith
             },
             
             getDibsPaytype : ko.observable(function() {  
@@ -34,11 +35,12 @@ define(
             getCardsPaytypes : function() {
                 var configKey = window.checkoutConfig.payment.dibsFlexwin;   
                 var cardsArr = 
-                     [{id:'dibs_flexwin_cards_visa',   title: $.mage.__('Visa'),   imgNumber: '07', paytype: 'VISA', enabled: configKey.visa    },
-                     {id: 'dibs_flexwin_cards_master', title: $.mage.__('Master'), imgNumber: '01', paytype: 'MC'  , enabled: configKey.master  },
-                     {id: 'dibs_flexwin_cards_amex',   title: $.mage.__('Amex'),   imgNumber: '06', paytype: 'AMEX', enabled: configKey.amex    },
-                     {id: 'dibs_flexwin_cards_diners', title: $.mage.__('Diners'), imgNumber: '04', paytype: 'DIN' , enabled: configKey.diners  },
-                     {id: 'dibs_flexwin_cards_dankort',title: $.mage.__('Dankort'),imgNumber: '03', paytype: 'DK'  , enabled: configKey.dankort }]
+                     [{id:'dibs_flexwin_cards_visa',   title: $.mage.__('Visa'),    imgNumber: '07', paytype: 'VISA',      enabled: configKey.paytype.visa    },
+                     {id: 'dibs_flexwin_cards_master', title: $.mage.__('Master'),  imgNumber: '01', paytype: 'MC'  ,      enabled: configKey.paytype.master  },
+                     {id: 'dibs_flexwin_cards_amex',   title: $.mage.__('Amex'),    imgNumber: '06', paytype: 'AMEX',      enabled: configKey.paytype.amex    },
+                     {id: 'dibs_flexwin_cards_diners', title: $.mage.__('Diners'),  imgNumber: '04', paytype: 'DIN' ,      enabled: configKey.paytype.diners  },
+                     {id: 'dibs_flexwin_cards_dankort',title: $.mage.__('Dankort'), imgNumber: '03', paytype: 'DK'  ,      enabled: configKey.paytype.dankort },
+                     {id: 'dibs_flexwin_mobilepay',    title: $.mage.__('MobilePay'),imgNumber:'10', paytype: 'MPO_Nets',  enabled: configKey.paytype.mobilepay }]
                 return _.filter(cardsArr, function(card){ return card.enabled == 1;});
             },
             
@@ -48,9 +50,13 @@ define(
             },
             
             imgUrl : function(imgNumber) {
-                var urlPrefix = 'https://cdn.dibspayment.com/logo/checkout/single/horiz/DIBS_checkout_single_' + imgNumber + '.png';
+                var urlPrefix = window.checkoutConfig.payment.dibsFlexwin.cdnUrlLogoPrefix + imgNumber + '.png';
                 return urlPrefix;
             },
+            /*
+            imgWidth : function() {
+                return 125;
+            },*/
        
             placeOrder : function() {
               var self = this;

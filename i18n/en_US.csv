@@ -5,5 +5,6 @@
 "Amex", "Amex"
 "Diners", "Diners"
 "Dankort", "Dankort"
+"MobilePay", "Mobile Pay", 
 "Customer successfully returned from DIBS","Customer successfully returned from DIBS Payment Gsteway"
 "Callback was received from DIBS","Callback was received from DIBS Payment Gateway"
