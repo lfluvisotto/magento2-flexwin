@@ -1,6 +1,6 @@
 <?php
 
-namespace Dibs\Flexwin\Controller\index;
+namespace Dibs\Flexwin\Controller\Index;
 use Magento\Framework\DataObject;
 class Request extends \Dibs\Flexwin\Controller\Index {
     

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dibs\Flexwin\Controller\index;
+namespace Dibs\Flexwin\Controller\Index;
 class Accept extends \Dibs\Flexwin\Controller\Index {
     
     public function execute() {

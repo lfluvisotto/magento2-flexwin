@@ -1,6 +1,6 @@
 <?php
 
-namespace Dibs\Flexwin\Controller\index;
+namespace Dibs\Flexwin\Controller\Index;
 class Callback extends \Dibs\Flexwin\Controller\Index 
 {
     public function execute() {
