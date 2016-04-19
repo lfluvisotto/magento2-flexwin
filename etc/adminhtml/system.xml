@@ -3,126 +3,126 @@
     <system>
         <section id="payment">
             <group id="dibs_flexwin_all" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Dibs Flexwin</label>
-            <comment><![CDATA[]]></comment>
-            <attribute type="expanded">1</attribute>
-          <group id="dibs_flexwin" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Common gateway settings</label>
-                
-                <field id="merchant" translate="label comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchantid:</label>
-                    <comment>Merchant id</comment>
-                    <config_path>payment/dibs_flexwin/merchant</config_path>
-                </field>
-                
-                <field id="test" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Testmode:</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/dibs_flexwin/testmode</config_path>
-                </field>
-                
-                <field id="capturenow" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Capturenow:</label>
-                    <comment>If this field exists, a capture request is automatically carried out after the authorization, following the normal capture process of the specific acquirer.</comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/dibs_flexwin/capturenow</config_path>
-                </field>
-                
-                <field id="active" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Enabled</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/dibs_flexwin/active</config_path>
-                </field>
-                
-                <field id="decorator" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Decorator:</label>
-                    <source_model>Dibs\Flexwin\Model\Config\Source\Decorator</source_model>
-                    <config_path>payment/dibs_flexwin/decorator</config_path>
-                </field>
-                
-                <field id="lang" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Language:</label>
-                    <source_model>Dibs\Flexwin\Model\Config\Source\Language</source_model>
-                    <config_path>payment/dibs_flexwin/lang</config_path>
-                </field>
-                
-                <field id="md5key1" translate="label comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>md5 Key1</label>
-                    <comment>md5 Key1</comment>
-                    <config_path>payment/dibs_flexwin/md5key1</config_path>
-                </field>
-                
-                 <field id="md5key2" translate="label comment" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>md5 Key2</label>
-                    <comment>md5 Key2</comment>
-                    <config_path>payment/dibs_flexwin/md5key2</config_path>
-                </field>
-                
-                 <field id="order_status" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Order Status After Payment:</label>
-                    <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>
-                    <config_path>payment/dibs_flexwin/order_status</config_path>
-                    <comment>Order sattus after payment</comment>
-                </field>
-                
-                <field id="order_status_pending" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Order Status Pending Payment:</label>
-                    <source_model>Dibs\Flexwin\Model\Config\Source\Pending</source_model>
-                    <config_path>payment/dibs_flexwin/order_status_pending</config_path>
-                    <comment>Order satus before is redirected to DIBS</comment>
-                </field>
-                
-                 <field id="order_status_cancel" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Order Status Cancelled:</label>
-                    <source_model>Dibs\Flexwin\Model\Config\Source\Cancel</source_model>
-                    <config_path>payment/dibs_flexwin/order_status_cancel</config_path>
-                    <comment>Order satus was cancelled by customer</comment>
-                </field>
-            </group>
-      
-            <group id="dibs_flexwin_cards" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Cards:</label>
-                
-                <field id="visa" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Visa:</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/dibs_flexwin/card_visa</config_path>
-                </field>
-                
-                <field id="master" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Master:</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/dibs_flexwin/card_master</config_path>
-                </field>
-             
-                <field id="amex" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Amex:</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/dibs_flexwin/card_amex</config_path>
-                </field>
-                
-                <field id="diners" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Diners:</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/dibs_flexwin/card_diners</config_path>
-                </field>
-                
-                <field id="dankort" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Dankort:</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/dibs_flexwin/card_dankort</config_path>
-                </field>
-             </group>
-             
-             <group id="dibs_flexwin_wallets" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Wallets:</label>
-                <field id="mobilepay" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>MobilePay:</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/dibs_flexwin/mobilepay</config_path>
-                </field>
-             </group>
-             
+                <label>Dibs Flexwin</label>
+                <comment><![CDATA[]]></comment>
+                <attribute type="expanded">1</attribute>
+                <group id="dibs_flexwin" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Common gateway settings</label>
+
+                    <field id="merchant" translate="label comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Merchantid:</label>
+                        <comment>Merchant id</comment>
+                        <config_path>payment/dibs_flexwin/merchant</config_path>
+                    </field>
+
+                    <field id="test" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Testmode:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/testmode</config_path>
+                    </field>
+
+                    <field id="capturenow" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Capturenow:</label>
+                        <comment>If this field exists, a capture request is automatically carried out after the authorization, following the normal capture process of the specific acquirer.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/capturenow</config_path>
+                    </field>
+
+                    <field id="active" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/active</config_path>
+                    </field>
+
+                    <field id="decorator" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Decorator:</label>
+                        <source_model>Dibs\Flexwin\Model\Config\Source\Decorator</source_model>
+                        <config_path>payment/dibs_flexwin/decorator</config_path>
+                    </field>
+
+                    <field id="lang" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Language:</label>
+                        <source_model>Dibs\Flexwin\Model\Config\Source\Language</source_model>
+                        <config_path>payment/dibs_flexwin/lang</config_path>
+                    </field>
+
+                    <field id="md5key1" translate="label comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>md5 Key1</label>
+                        <comment>md5 Key1</comment>
+                        <config_path>payment/dibs_flexwin/md5key1</config_path>
+                    </field>
+
+                    <field id="md5key2" translate="label comment" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>md5 Key2</label>
+                        <comment>md5 Key2</comment>
+                        <config_path>payment/dibs_flexwin/md5key2</config_path>
+                    </field>
+
+                    <field id="order_status" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Order Status After Payment:</label>
+                        <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>
+                        <config_path>payment/dibs_flexwin/order_status</config_path>
+                        <comment>Order sattus after payment</comment>
+                    </field>
+
+                    <field id="order_status_pending" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Order Status Pending Payment:</label>
+                        <source_model>Dibs\Flexwin\Model\Config\Source\Pending</source_model>
+                        <config_path>payment/dibs_flexwin/order_status_pending</config_path>
+                        <comment>Order satus before is redirected to DIBS</comment>
+                    </field>
+
+                    <field id="order_status_cancel" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Order Status Cancelled:</label>
+                        <source_model>Dibs\Flexwin\Model\Config\Source\Cancel</source_model>
+                        <config_path>payment/dibs_flexwin/order_status_cancel</config_path>
+                        <comment>Order satus was cancelled by customer</comment>
+                    </field>
+                </group>
+
+                <group id="dibs_flexwin_cards" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cards:</label>
+
+                    <field id="visa" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Visa:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/card_visa</config_path>
+                    </field>
+
+                    <field id="master" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Master:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/card_master</config_path>
+                    </field>
+
+                    <field id="amex" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Amex:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/card_amex</config_path>
+                    </field>
+
+                    <field id="diners" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Diners:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/card_diners</config_path>
+                    </field>
+
+                    <field id="dankort" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Dankort:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/card_dankort</config_path>
+                    </field>
+                </group>
+
+                <group id="dibs_flexwin_wallets" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Wallets:</label>
+                    <field id="mobilepay" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>MobilePay:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/mobilepay</config_path>
+                    </field>
+                </group>
+
             </group>
         </section>
     </system>
