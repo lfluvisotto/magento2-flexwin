@@ -12,11 +12,11 @@ define(
         'use strict';
 
         return function (messageContainer, requestData, method) {
-          
+
             var serviceUrl,
                 payload,
                 paymentData = quote.paymentMethod();
-                
+
             if (!customer.isLoggedIn()) {
                 serviceUrl = urlBuilder.createUrl('/guest-carts/:quoteId/payment-information', {
                     quoteId: quote.getQuoteId()
@@ -37,37 +37,38 @@ define(
             }
 
             fullScreenLoader.startLoader();
-           
+
             return storage.post(
                 serviceUrl, JSON.stringify(payload)
             ).done(
                 function (data) {
                     $.ajax({
-                      method: "POST",
-                      url: window.checkoutConfig.payment.dibsFlexwin.getPlaceOrderUrl,
-                      data: { paytype: method, 
-                              cartid: quote.getQuoteId(), 
-                              orderid: data
-                            },
-                      dataType: 'json'
+                        method: "POST",
+                        url: window.checkoutConfig.payment.dibsFlexwin.getPlaceOrderUrl,
+                        data: {
+                            paytype: method,
+                            cartid: quote.getQuoteId(),
+                            orderid: data
+                        },
+                        dataType: 'json'
                     })
-                      .done(function( jsonResponse ) {
-                          //debugger;
-                        if(jsonResponse.result == 'success') {
-                            var requestDataArr = [];    
-                            requestData.subscribe( function(){
-                                $('#payment-form-dibs').submit();
-                            });
-                            $.each(jsonResponse.params, function (name, value) {
-                                requestDataArr.push({'name':name, 'value':value});
-                            });
-                           requestData(requestDataArr);
-                        } else {
-                            fullScreenLoader.stopLoader();
-                            alert(jsonResponse.message);
-                            window.location.href = '/checkout/cart/';
-                        }
-                      });
+                        .done(function (jsonResponse) {
+                            //debugger;
+                            if (jsonResponse.result == 'success') {
+                                var requestDataArr = [];
+                                requestData.subscribe(function () {
+                                    $('#payment-form-dibs').submit();
+                                });
+                                $.each(jsonResponse.params, function (name, value) {
+                                    requestDataArr.push({'name': name, 'value': value});
+                                });
+                                requestData(requestDataArr);
+                            } else {
+                                fullScreenLoader.stopLoader();
+                                alert(jsonResponse.message);
+                                window.location.href = '/checkout/cart/';
+                            }
+                        });
                 }
             ).fail(
                 function (response) {
@@ -75,7 +76,7 @@ define(
                     fullScreenLoader.stopLoader();
                 }
             );
-     
+
         };
     }
 );
