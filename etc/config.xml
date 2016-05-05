@@ -1,18 +1,19 @@
+<?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
-<default>
-    <payment>
-        <dibs_flexwin>
-            <title>Dibs Flexwin</title>
-            <active>0</active>
-            <model>DibsFlexWin</model>
-            <is_gateway>1</is_gateway>
-            <can_order>1</can_order>
-            <can_use_checkout>1</can_use_checkout>
-            <form_action_url>https://payment.architrade.com/paymentweb/start.action</form_action_url>
-            <place_order_url>dibsflexwin/index/request</place_order_url>
-            <cdn_url_logo_prefix>https://cdn.dibspayment.com/logo/checkout/single/horiz/DIBS_checkout_single_</cdn_url_logo_prefix>
-            <logo_with>125</logo_with>
-         </dibs_flexwin>
-    </payment>
-</default>
+    <default>
+        <payment>
+            <dibs_flexwin>
+                <title>Dibs Flexwin</title>
+                <active>0</active>
+                <model>DibsFlexWin</model>
+                <is_gateway>1</is_gateway>
+                <can_order>1</can_order>
+                <can_use_checkout>1</can_use_checkout>
+                <form_action_url>https://payment.architrade.com/paymentweb/start.action</form_action_url>
+                <place_order_url>dibsflexwin/index/request</place_order_url>
+                <cdn_url_logo_prefix>https://cdn.dibspayment.com/logo/checkout/single/horiz/DIBS_checkout_single_</cdn_url_logo_prefix>
+                <logo_with>125</logo_with>
+            </dibs_flexwin>
+        </payment>
+    </default>
 </config>

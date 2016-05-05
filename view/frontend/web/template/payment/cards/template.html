@@ -15,9 +15,9 @@
             <span data-bind="i18n: 'You will be redirected to DIBS payment window..'"></span>
         </div>
         <form id="payment-form-dibs" data-bind="foreach: $parent.requestData, attr: {action : $parent.getDibsActionFormUrl() }" method="POST">
-          <input type="hidden" data-bind="attr: {'name': $data.name, 'value': $data.value }"/>
+            <input type="hidden" data-bind="attr: {'name': $data.name, 'value': $data.value }"/>
         </form>
-        
+
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"

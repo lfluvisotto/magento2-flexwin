@@ -2,7 +2,7 @@
 
 namespace Dibs\Flexwin\Model\Config\Source;
 
-class Pending extends \Magento\Sales\Model\Config\Source\Order\Status 
+class Pending extends \Magento\Sales\Model\Config\Source\Order\Status
 {
     /**
      * @var string

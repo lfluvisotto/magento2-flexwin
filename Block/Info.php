@@ -11,9 +11,9 @@ class Info extends \Magento\Payment\Block\Info
         }
         $transport = parent::_prepareSpecificInformation($transport);
         $data = [];
-        
-        if($this->getInfo()->getLastTransId()) {
-            $data['Transaction Id'] = $this->getInfo()->getLastTransId(); 
+
+        if ($this->getInfo()->getLastTransId()) {
+            $data['Transaction Id'] = $this->getInfo()->getLastTransId();
         }
         return $transport->setData(array_merge($data, $transport->getData()));
     }
