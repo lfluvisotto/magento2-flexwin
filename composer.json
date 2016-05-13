@@ -8,12 +8,11 @@
     "license": [
         "OSL-3.0"
     ],
-    "extra": {
-        "map": [
-            [
-                "*",
-                "Dibs/Flexwin"
-            ]
-        ]
+    "autoload": {
+        "files": [ "registration.php" ],
+        "psr-4": {
+            "Dibs\\Flexwin\\": ""
+        }
     }
+
 }
