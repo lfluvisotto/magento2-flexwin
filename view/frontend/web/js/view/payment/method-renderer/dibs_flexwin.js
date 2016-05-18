@@ -32,7 +32,7 @@ define(
                 return window.checkoutConfig.payment.dibsFlexwin.formActionUrl;
             },
 
-            getCardsPaytypes: function () {
+            getEnabledPaytypes: function () {
                 var configKey = window.checkoutConfig.payment.dibsFlexwin;
                 var cardsArr =
                     [
@@ -94,18 +94,14 @@ define(
                 var urlPrefix = window.checkoutConfig.payment.dibsFlexwin.cdnUrlLogoPrefix + imgNumber + '.png';
                 return urlPrefix;
             },
-            /*
-             imgWidth : function() {
-             return 125;
-             },*/
-
+            
             placeOrder: function () {
                 var self = this;
                 var obj = storage.get('checkout-data');
                 if (self.validate()) {
                     self.selectPaymentMethod();
                     setPaymentMethodAction(this.messageContainer, self.requestData,
-                        _.find(this.getCardsPaytypes(), function (card) {
+                        _.find(this.getEnabledPaytypes(), function (card) {
                             return card.id == obj.paytypeId;
                         }).paytype);
                 }

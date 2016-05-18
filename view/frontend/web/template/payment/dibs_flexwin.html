@@ -4,10 +4,6 @@
  * See COPYING.txt for license details.
  */
 -->
-<!-- ko foreach: getCardsPaytypes() -->
+<!-- ko foreach: getEnabledPaytypes() -->
     <!-- ko template: 'Dibs_Flexwin/payment/cards/template' --><!-- /ko -->
-<!-- /ko -->
-
-<!-- ko if: (getCardsPaytypes().length == 0) -->
-    <!-- ko template: 'Dibs_Flexwin/payment/no_methods' --><!-- /ko -->
 <!-- /ko -->

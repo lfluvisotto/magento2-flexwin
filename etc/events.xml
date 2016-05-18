@@ -4,4 +4,8 @@
         <observer name="Dibs_Fexwin_Sales_Order_Payment_Place_Start"
                   instance="Dibs\Flexwin\Observer\paymentPlaceStart"/>
     </event>
-</config>
+    <event name="payment_method_is_active">
+        <observer name="Dibs_Fexwin_Availability_Validate"
+                  instance="Dibs\Flexwin\Observer\availabilityValidator"/>
+    </event>
+ </config>

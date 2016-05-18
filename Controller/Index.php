@@ -25,11 +25,7 @@ abstract class Index extends \Magento\Framework\App\Action\Action
 
     public function checkPost()
     {
-        if ($this->getRequest()->isPost() &&
-            $this->getRequest()->getParam(\Dibs\Flexwin\Model\Method::KEY_ORDERID_NAME)
-        ) {
-            return true;
-        }
-        return false;
+       return $this->getRequest()->isPost() &&
+              $this->getRequest()->getParam(\Dibs\Flexwin\Model\Method::KEY_ORDERID_NAME) ? true : false;
     }
 }
