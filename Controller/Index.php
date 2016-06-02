@@ -8,13 +8,14 @@ abstract class Index extends \Magento\Framework\App\Action\Action
     protected $quote;
     protected $checkoutSession;
     protected $method;
-
+  
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Sales\Model\Order $order,
         \Magento\Quote\Model\Quote $quote,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Dibs\Flexwin\Model\Method $method
+        
     ) {
         parent::__construct($context);
         $this->order = $order;

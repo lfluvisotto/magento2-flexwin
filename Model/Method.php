@@ -15,6 +15,7 @@ class Method
     protected $request;
     protected $order;
     protected $orderSender;
+    protected $scopeConfig;
 
     const KEY_CURRENCY_NAME    = 'currency';
     const KEY_MERCHANT_NAME    = 'merchant';
@@ -42,7 +43,8 @@ class Method
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Framework\App\Request\Http $request,
         \Magento\Sales\Model\Order $order,
-        \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
+        \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
 
     ) {
         $this->quote = $quote;
@@ -53,6 +55,8 @@ class Method
         $this->request = $request;
         $this->order = $order;
         $this->orderSender = $orderSender;
+        $this->scopeConfig = $scopeConfig;
+        
     }
 
     /**
@@ -70,15 +74,13 @@ class Method
             $order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
             $this->setCustomOrderStatus('order_status_pending');
             $order->save();
-            $quote = $this->quote->loadByIdWithoutStore($order->getQuoteId());
-            $this->_quote = $quote;
-
+           
             $requestParams['result'] = 'success';
             $requestParams['params'] = array(
                 self::KEY_MERCHANT_NAME    => trim($this->methodObj->getConfigData(self::KEY_MERCHANT_NAME)),
                 self::KEY_ORDERID_NAME     => $orderId,
-                self::KEY_CURRENCY_NAME    => $this->_quote->getBaseCurrencyCode(),
-                self::KEY_AMOUNT_NAME      => $this->api_dibs_round($this->_quote->getGrandTotal()),
+                self::KEY_CURRENCY_NAME    => $order->getOrderCurrencyCode(),
+                self::KEY_AMOUNT_NAME      => $this->api_dibs_round($order->getGrandTotal()),
                 self::KEY_ACCEPTURL_NAME   => $this->urlInterface->getDirectUrl('dibsflexwin/index/accept'),
                 self::KEY_CANCELURL_NAME   => $this->urlInterface->getDirectUrl('dibsflexwin/index/cancel'),
                 self::KEY_PAYTYPE_NAME     => $this->request->getParam(self::KEY_PAYTYPE_NAME),
@@ -92,7 +94,9 @@ class Method
                 $requestParams['params'][self::KEY_DECORATOR_NAME] = $this->methodObj->getConfigData(self::KEY_DECORATOR_NAME);
             }
             if ($this->methodObj->getConfigData(self::KEY_LANG_NAME)) {
-                $requestParams['params'][self::KEY_LANG_NAME] = $this->methodObj->getConfigData(self::KEY_LANG_NAME);
+                $langCode = $this->scopeConfig->getValue('payment/' . ConfigProvider::METHOD_CODE . 
+                        '/' . self::KEY_LANG_NAME, \Magento\Store\Model\ScopeInterface::SCOPE_STORES);
+                $requestParams['params'][self::KEY_LANG_NAME] = $langCode;
             }
             $macCodeParams = array(
                 self::KEY_MERCHANT_NAME => $requestParams['params'][self::KEY_MERCHANT_NAME],

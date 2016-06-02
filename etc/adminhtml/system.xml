@@ -9,7 +9,7 @@
                 <group id="dibs_flexwin" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Common gateway settings</label>
 
-                    <field id="merchant" translate="label comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="merchant" translate="label comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Merchantid:</label>
                         <comment>Merchant id</comment>
                         <config_path>payment/dibs_flexwin/merchant</config_path>
@@ -40,19 +40,19 @@
                         <config_path>payment/dibs_flexwin/decorator</config_path>
                     </field>
 
-                    <field id="lang" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="lang" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Language:</label>
                         <source_model>Dibs\Flexwin\Model\Config\Source\Language</source_model>
                         <config_path>payment/dibs_flexwin/lang</config_path>
                     </field>
 
-                    <field id="md5key1" translate="label comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="md5key1" translate="label comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>md5 Key1</label>
                         <comment>md5 Key1</comment>
                         <config_path>payment/dibs_flexwin/md5key1</config_path>
                     </field>
 
-                    <field id="md5key2" translate="label comment" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="md5key2" translate="label comment" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>md5 Key2</label>
                         <comment>md5 Key2</comment>
                         <config_path>payment/dibs_flexwin/md5key2</config_path>
