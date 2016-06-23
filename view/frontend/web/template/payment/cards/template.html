@@ -3,7 +3,7 @@
         <input type="radio"
                name="payment[method]"
                class="radio"
-               data-bind="attr: {'id': $data.id}, value: $data.id, checked: $parent.getDibsPaytype(), click: $parent.setCustomPaymentMethod.bind($parent), visible: $parent.isRadioButtonVisible()"/>
+               data-bind="attr: {'id': $data.id}, value: $data.id, checked: $parent.getDibsPaytype(), click: $parent.setCustomPaymentMethod.bind($parent)"/>
         <label data-bind="attr: {'for': $data.id}" class="label">
             <img data-bind="attr: {src: $parent.imgUrl($data.imgNumber), width: $parent.imgWidth}"
                  class="payment-icon"/>
