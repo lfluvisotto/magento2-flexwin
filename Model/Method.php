@@ -238,7 +238,7 @@ class Method
     {
         $order = $this->order->loadByIncrementId($orderid);
         if ($order->getId()) {
-            $order->setState(\Magento\Sales\Model\Order::STATE_CANCELED);
+            $order->cancel();
             $this->setCustomOrderStatus('order_status_cancel');
             $order->addStatusHistoryComment(__('Customer has cancelled payment'));
             $order->save();
