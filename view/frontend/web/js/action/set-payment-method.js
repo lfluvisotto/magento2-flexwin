@@ -25,7 +25,7 @@ define(
                     cartId: quote.getQuoteId(),
                     email: quote.guestEmail,
                     paymentMethod: paymentData,
-                    fuckingShippngAddress: quote.billingAddress()
+                    billingAddress: quote.billingAddress()
                 };
             } else {
                 serviceUrl = urlBuilder.createUrl('/carts/mine/payment-information', {});
