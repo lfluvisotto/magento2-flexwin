@@ -13,7 +13,7 @@ class Info extends \Magento\Payment\Block\Info
         $data = [];
 
         if ($this->getInfo()->getLastTransId()) {
-            $data[__('Transaction Id')] = $this->getInfo()->getLastTransId();
+            $data[(string)__('Transaction Id')] = $this->getInfo()->getLastTransId();
         }
         return $transport->setData(array_merge($data, $transport->getData()));
     }
