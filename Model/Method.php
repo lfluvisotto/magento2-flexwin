@@ -189,7 +189,7 @@ class Method
     public function completeCheckout($context = self::RETURN_CONTEXT_ACCEPT)
     {
         if ($this->checkMd5KeyCodeRequired()) {
-            $returedParams = array(
+            $returnedParams = array(
                 self::KEY_MERCHANT_NAME => $this->request->getParam(self::KEY_MERCHANT_NAME),
                 self::KEY_ORDERID_NAME  => $this->request->getParam(self::KEY_ORDERID_NAME),
                 self::KEY_CURRENCY_NAME => $this->request->getParam(self::KEY_CURRENCY_NAME),
@@ -197,7 +197,7 @@ class Method
                 self::KEY_MD5KEY_NAME   => $this->request->getParam(self::KEY_MD5KEY_NAME),
             );
 
-            if (!$this->checkMacCode($returedParams)) {
+            if (!$this->checkMacCode($returnedParams)) {
                 // add logging of fail mac code
 
                 return;
@@ -221,17 +221,18 @@ class Method
         return empty($fNum) ? (int) 0 : (int) (string) (round($fNum, $iPrec) * pow(10, $iPrec));
     }
 
-    protected function checkMacCode($returedParams = array())
+    /**
+     *  Compare calculated mac
+     *  code based on returned params
+     *  and returned mac code
+     *
+     * @param type $returnedParams
+     * @return boolean
+     */
+    protected function checkMacCode(array $returnedParams)
     {
-        if ($returedParams && isset($returedParams[self::KEY_MD5KEY_NAME])) {
-            if ($this->calcMd5Code($returedParams) == $returedParams[self::KEY_MD5KEY_NAME]) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+       return ($this->calcMd5Code($returnedParams) ==
+               $returnedParams[self::KEY_MD5KEY_NAME]) ? true : false;
     }
 
     public function setOrderCancelled($orderid)
