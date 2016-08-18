@@ -281,10 +281,9 @@ class Method
 
     protected function setCustomOrderStatus($statusConfName)
     {
-        $orderStatus = $orderStatusCancel = $this->methodObj->getConfigData($statusConfName);
+        $orderStatus = $this->methodObj->getConfigData($statusConfName);
         if ($orderStatus) {
             $this->order->setStatus($orderStatus);
         }
-
     }
 }
