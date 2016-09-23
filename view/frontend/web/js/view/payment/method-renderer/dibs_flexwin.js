@@ -8,10 +8,11 @@ define(
         'Magento_Checkout/js/checkout-data',
         'Magento_Customer/js/customer-data',
         'ko',
-        'jquery'
+        'jquery',
+        'Magento_Checkout/js/model/payment/additional-validators'
     ],
     function (Component, setPaymentMethodAction, selectPaymentMethodAction,
-              checkoutData, storage, ko, $) {
+              checkoutData, storage, ko, $, additionalValidators) {
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,
@@ -98,7 +99,7 @@ define(
             placeOrder: function () {
                 var self = this;
                 var obj = storage.get('checkout-data');
-                if (self.validate()) {
+                if (self.validate() && additionalValidators.validate() ) {
                     self.selectPaymentMethod();
                     setPaymentMethodAction(this.messageContainer, self.requestData,
                         _.find(this.getEnabledPaytypes(), function (card) {

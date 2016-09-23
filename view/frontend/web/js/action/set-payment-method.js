@@ -10,9 +10,8 @@ define(
     ],
     function ($, quote, urlBuilder, storage, errorProcessor, customer, fullScreenLoader) {
         'use strict';
-
+        var agreementsConfig = window.checkoutConfig.checkoutAgreements;
         return function (messageContainer, requestData, method) {
-
             var serviceUrl,
                 payload,
                 paymentData = quote.paymentMethod();
@@ -35,9 +34,17 @@ define(
                     billingAddress: quote.billingAddress()
                 };
             }
-
+             // some copy-paste from place-order-mixin.js for adding agreements...
+            if (agreementsConfig.isEnabled) {
+                    var agreementForm = $('.payment-method._active form[data-role=checkout-agreements]'),
+                agreementData = agreementForm.serializeArray(),
+                agreementIds = [];
+                agreementData.forEach(function(item) {
+                    agreementIds.push(item.value);
+                });
+                paymentData.extension_attributes = {agreement_ids: agreementIds};
+            }
             fullScreenLoader.startLoader();
-
             return storage.post(
                 serviceUrl, JSON.stringify(payload)
             ).done(
