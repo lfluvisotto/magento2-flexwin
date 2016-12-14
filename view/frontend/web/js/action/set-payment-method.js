@@ -6,9 +6,11 @@ define(
         'mage/storage',
         'Magento_Checkout/js/model/error-processor',
         'Magento_Customer/js/model/customer',
-        'Magento_Checkout/js/model/full-screen-loader'
+        'Magento_Checkout/js/model/full-screen-loader',
+        'mage/url'
+        
     ],
-    function ($, quote, urlBuilder, storage, errorProcessor, customer, fullScreenLoader) {
+    function ($, quote, urlBuilder, storage, errorProcessor, customer, fullScreenLoader, url) {
         'use strict';
         var agreementsConfig = window.checkoutConfig.checkoutAgreements;
         return function (messageContainer, requestData, method) {
@@ -73,7 +75,7 @@ define(
                             } else {
                                 fullScreenLoader.stopLoader();
                                 alert(jsonResponse.message);
-                                window.location.href = '/checkout/cart/';
+                                window.location.href = url.build('checkout/cart');
                             }
                         });
                 }
