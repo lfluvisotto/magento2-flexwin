@@ -3,10 +3,6 @@
 namespace Dibs\Flexwin\Model;
 
 use Magento\Payment\Helper\Data as PaymentHelper;
-
-use Magento\Framework\Registry;
-use Magento\Framework\Message\ManagerInterface;
-use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 
 class Method
@@ -62,9 +58,7 @@ class Method
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Sales\Model\Service\InvoiceService $invoiceService,
-        \Magento\Framework\ObjectManagerInterface $_objectManager,
-        Registry $registry
-       
+        \Magento\Framework\ObjectManagerInterface $_objectManager
     ) {
         $this->quote = $quote;
         $this->urlInterface = $urlInterface;
@@ -77,7 +71,6 @@ class Method
         $this->scopeConfig = $scopeConfig;
         $this->invoiceService = $invoiceService;
         $this->_objectManager = $_objectManager;
-        $this->registry = $registry;
     }
 
     /**
