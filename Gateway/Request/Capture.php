@@ -3,7 +3,6 @@
 namespace Dibs\Flexwin\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use Dibs\Flexwin\Gateway\Request\Request;
 use Dibs\Flexwin\Model\Method;
 
 class Capture extends Request implements BuilderInterface

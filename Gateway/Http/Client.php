@@ -28,23 +28,26 @@ class Client implements ClientInterface
      */
     public function placeRequest(TransferInterface $transferObject)
     {
-        try {
                $curlOptions = [CURLOPT_SSLVERSION => 1,
                                CURLOPT_SSL_VERIFYPEER => false];
                $this->curlClient->setHeaders($transferObject->getHeaders());
                $this->curlClient->setOptions($curlOptions);
-               $this->curlClient->post($transferObject->getUri(), $transferObject->getBody());
+               try {
+                  $this->curlClient->post($transferObject->getUri(), $transferObject->getBody());
+               } catch(\Exception $ex) {
+                   throw new \Magento\Framework\Exception\LocalizedException(__($ex->getMessage()));
+               }
                $statusCode = $this->curlClient->getStatus();
                if($statusCode == 401 ) {
-                   throw new \Exception(__('Authorization failed'));
+	           throw new \Magento\Framework\Exception\LocalizedException(__('Authorization failed'));
                }
                if($statusCode == 404 ) {
-                   throw new \Exception(__('404 Error'));
+	          throw new \Magento\Framework\Exception\LocalizedException(__('404 Error'));
                }
                if($statusCode != 200 ) {
                    $msg = 'DIBS error occured. Response HTTP status code:';
                    $msg .= $this->curlClient->getStatus();
-                   throw new \Exception($msg);
+                   throw new \Magento\Framework\Exception\LocalizedException(__($msg));
                }
                $body = $this->curlClient->getBody();
                
@@ -55,13 +58,9 @@ class Client implements ClientInterface
                if(\Dibs\Flexwin\Model\Method::API_OPERATION_FAILURE == $status) {
                    $error = $this->processError($body);
                }
-               
-        } catch (\Exception $ex) {
-              $this->message->addError($ex->getMessage());
-        }
-        return ['status'=> $status,
-                'body'  => $body,
-                'error'  => $error];
+               return ['status'=> $status,
+                        'body' => $body,
+                        'error'=> $error];
     }
     
     protected function processError($responseBody) {
