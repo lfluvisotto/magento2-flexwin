@@ -15,3 +15,7 @@
 "Transaction was refunded", "Transaction was successfully refunded online through DIBS"
 "Refund declined",  "Online refund was declined by DIBS"
 "Capture declined", "Online capture was declined by DIBS"
+"Nordea", "Nordea"
+"Paypal", "Paypal"
+"SEB Bank", "SEB Bank"
+"Swedbank", "Swedbank"

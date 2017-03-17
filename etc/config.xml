@@ -15,7 +15,6 @@
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <form_action_url>https://payment.architrade.com/paymentweb/start.action</form_action_url>
                 <place_order_url>dibsflexwin/index/request</place_order_url>
-                <cdn_url_logo_prefix>https://cdn.dibspayment.com/logo/checkout/single/horiz/DIBS_checkout_single_</cdn_url_logo_prefix>
                 <logo_with>125</logo_with>
             </dibs_flexwin>
         </payment>

@@ -151,7 +151,6 @@
                         <config_path>payment/dibs_flexwin/card_dankort</config_path>
                     </field>
                 </group>
-
                 <group id="dibs_flexwin_wallets" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Wallets:</label>
                     <field id="mobilepay" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -160,7 +159,29 @@
                         <config_path>payment/dibs_flexwin/mobilepay</config_path>
                     </field>
                 </group>
-
+                <group id="dibs_flexwin_directbank" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Directbanks:</label>
+                    <field id="swedbank" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Swedbank:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/swedbank</config_path>
+                    </field>
+                    <field id="seb" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>SEB Bank:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/seb</config_path>
+                    </field>
+                    <field id="paypal" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Paypal:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/paypal</config_path>
+                    </field>
+                    <field id="nordea" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Nordea Solo-E betaling (Sweden):</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/nordea</config_path>
+                    </field>
+                </group>
             </group>
         </section>
     </system>

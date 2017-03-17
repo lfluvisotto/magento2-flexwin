@@ -4,7 +4,7 @@ namespace Dibs\Flexwin\Model;
 
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
-
+use Magento\Sales\Model\Order\Invoice;
 class Method
 {
     protected $quote;
@@ -237,7 +237,8 @@ class Method
 
     public static function api_dibs_round($fNum, $iPrec = 2)
     {
-        return empty($fNum) ? (int) 0 : (int) (string) (round($fNum, $iPrec) * pow(10, $iPrec));
+        return empty($fNum) ? (int) 0 : (int) (string)
+                (round($fNum, $iPrec) * pow(10, $iPrec));
     }
 
     /**
@@ -305,10 +306,10 @@ class Method
             $this->order->setStatus($orderStatus);
         }
     }
-    
+
     protected function capture($invoice, $payment) {
          try {
-                $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
+                $invoice->setRequestedCaptureCase(Invoice::CAPTURE_OFFLINE);
                 $invoice->setTransactionId($payment->getLastTransId());
                 $invoice->register();
                 $transactionSave = $this->_objectManager->create(
@@ -323,7 +324,7 @@ class Method
                 // catch and continue
             }
     }
-    
+
     protected function updateTotals(OrderPaymentInterface $payment, $data)
     {
         foreach ($data as $key => $amount) {
