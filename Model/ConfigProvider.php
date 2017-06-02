@@ -80,7 +80,7 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
                                         'logo'=>$this->getLogo('paypal'),
                                          'id' => 'dibs_flexwin_paypal',
                                          'title' => __('Paypal'),
-                                         'paytype' => $this->method->getConfigData('testmode') == 1?'paypaltest':'paypal'],
+                                         'paytype' => $this->method->getConfigData('testmode') == 1 ?'paypaltest':'paypal'],
                         'nordea'    => ['enabled' => $this->method->getConfigData('nordea'),
                                         'logo' => $this->getLogo('nordea'),
                                         'id' => 'dibs_flexwin_nordea',
