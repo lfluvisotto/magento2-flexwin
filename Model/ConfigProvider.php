@@ -70,7 +70,7 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
                                         'logo'=>$this->getLogo('swedbank'),
                                          'id'=> 'dibs_flexwin_fsb',
                                          'title'=> __('Swedbank'),
-                                         'paytype'=> $this->method->getConfigData('testmode') == 1 ? 'fsbtest' : 'fsb'],
+                                         'paytype'=> $this->method->getConfigData('testmode') == 1 ? 'swd_atest' : 'swd_a'],
                         'seb'       => ['enabled' => $this->method->getConfigData('seb'),
                                         'logo'=>$this->getLogo('seb'),
                                          'id' => 'dibs_flexwin_seb',
