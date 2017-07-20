@@ -5,6 +5,8 @@ namespace Dibs\Flexwin\Model;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order\Invoice;
+use Magento\Sales\Model\Order\Payment\Transaction;
+
 class Method
 {
     protected $quote;
@@ -20,6 +22,9 @@ class Method
     protected $invoiceService;
     protected $_objectManager;
     protected $registry;
+    protected $transaction;
+    protected $_transactionBuilder;
+    protected $logger;
 
     const KEY_CURRENCY_NAME    = 'currency';
     const KEY_MERCHANT_NAME    = 'merchant';
@@ -45,8 +50,8 @@ class Method
     const API_OPERATION_FAILURE = 'DECLINED';
     
     const CAPTURE_URL = 'https://payment.architrade.com/cgi-bin/capture.cgi';
-    
     const REFUND_URL_PATTERN = 'https://login:password@payment.architrade.com/cgi-adm/refund.cgi';
+    const CANCEL_URL_PATTERN = 'https://login:password@payment.architrade.com/cgi-adm/cancel.cgi';
     
     public function __construct(
         \Magento\Quote\Model\Quote $quote,
@@ -58,7 +63,10 @@ class Method
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Sales\Model\Service\InvoiceService $invoiceService,
-        \Magento\Framework\ObjectManagerInterface $_objectManager
+        \Magento\Framework\ObjectManagerInterface $_objectManager,
+        Transaction $transaction,
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->quote = $quote;
         $this->urlInterface = $urlInterface;
@@ -71,6 +79,9 @@ class Method
         $this->scopeConfig = $scopeConfig;
         $this->invoiceService = $invoiceService;
         $this->_objectManager = $_objectManager;
+        $this->transaction = $transaction;
+        $this->_transactionBuilder = $transactionBuilder;
+        $this->logger = $logger;
     }
 
     /**
@@ -82,7 +93,6 @@ class Method
     public function collectRequestParams()
     {
         $order = $this->order->load($this->request->getParam(self::KEY_ORDERID_NAME));
-
         if ($order->getId()) {
             $orderId = $order->getIncrementId();
             $order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
@@ -100,7 +110,6 @@ class Method
                 self::KEY_PAYTYPE_NAME     => $this->request->getParam(self::KEY_PAYTYPE_NAME),
                 self::KEY_CALLBACKURL_NAME => $this->urlInterface->getDirectUrl('dibsflexwin/index/callback')
             );
-
             if ($this->methodObj->getConfigData(self::KEY_TESTMODE_NAME) == 1) {
                 $requestParams['params']['test'] = 1;
             }
@@ -121,15 +130,12 @@ class Method
                 self::KEY_CURRENCY_NAME => $requestParams['params'][self::KEY_CURRENCY_NAME],
                 self::KEY_AMOUNT_NAME   => $requestParams['params'][self::KEY_AMOUNT_NAME]
             );
-
             if ($md5Key = $this->calcMd5Code($macCodeParams)) {
                 $requestParams['params'][self::KEY_MD5KEY_NAME] = $md5Key;
             }
-
             if ($this->methodObj->getConfigData(self::KEY_CAPTURENOW_NAME) == '1') {
                 $requestParams['params'][self::KEY_CAPTURENOW_NAME] = 1;
             }
-
             // Billing info
             $billingAddress = $order->getBillingAddress();
             $requestParams['params']['delivery01.Billing'] = 'Billing Address';
@@ -207,6 +213,8 @@ class Method
         $orderIncrementId = $this->request->getParam(self::KEY_ORDERID_NAME);
         $order = $this->order->loadByIncrementId($orderIncrementId);
         $transactId = $this->request->getParam('transact');
+        
+        $this->authorizeTransaction($order, ['id' => $transactId]);
         if ($order->getId()) {
             $order->addStatusHistoryComment($orderComment);
             $order->save();
@@ -244,7 +252,6 @@ class Method
                 self::KEY_AMOUNT_NAME   => $this->request->getParam(self::KEY_AMOUNT_NAME),
                 self::KEY_MD5KEY_NAME   => $this->request->getParam(self::KEY_MD5KEY_NAME),
             );
-
             if (!$this->checkMacCode($returnedParams)) {
                 // add logging of fail mac code
 
@@ -257,9 +264,9 @@ class Method
         }
         $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
         $this->setCustomOrderStatus('order_status');
+        $payment = $order->getPayment();
         if($this->shouldMakeInvoice() && $order->canInvoice()) {
             $invoice = $this->invoiceService->prepareInvoice($order);
-            $payment = $order->getPayment();
             $this->capture($invoice, $payment);
         } 
         $order->setIsNotified(false);
@@ -295,7 +302,6 @@ class Method
             $order->addStatusHistoryComment(__('Customer has cancelled payment'));
             $order->save();
         }
-
     }
 
     public function restoreQuoteFromOrder($orderid)
@@ -318,7 +324,6 @@ class Method
     {
         return trim($this->methodObj->getConfigData(self::KEY_MD5_KEY1_NAME)) &&
         trim($this->methodObj->getConfigData(self::KEY_MD5_KEY2_NAME)) ? true : false;
-
     }
 
     /**
@@ -329,7 +334,6 @@ class Method
      *
      * @return type
      */
-
     protected function setCustomOrderStatus($statusConfName)
     {
         $orderStatus = $this->methodObj->getConfigData($statusConfName);
@@ -352,7 +356,7 @@ class Method
                 );
                 $transactionSave->save();
             } catch(\Exception $e) {
-                // catch and continue
+                 $this->logger->critical($e->getMessage());
             }
     }
 
@@ -420,5 +424,43 @@ class Method
         );
         return isset($aCurrency[$code]) ? $aCurrency[$code] : 0;
     }
-
+    
+    public function authorizeTransaction($order = null, $paymentData = array())
+    {
+        try {
+            //get payment object from order object
+            $payment = $order->getPayment();
+            $payment->setLastTransId($paymentData['id']);
+            $payment->setTransactionId($paymentData['id']);
+            $payment->setAdditionalInformation(
+                [\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS => (array) $paymentData]
+            );
+            $formatedPrice = $order->getBaseCurrency()->formatTxt(
+                $order->getGrandTotal()
+            );
+            $message = __('The authorized amount is %1.', $formatedPrice);
+            //get the object of builder class
+            $trans = $this->_transactionBuilder;
+            $transaction = $trans->setPayment($payment)
+            ->setOrder($order)
+            ->setTransactionId($paymentData['id'])
+            ->setAdditionalInformation(
+                [\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS => (array) $paymentData]
+            )
+            ->setFailSafe(true)
+            ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_AUTH);
+            $payment->addTransactionCommentsToOrder(
+                $transaction,
+                $message
+            );
+            $transaction->setParentTxnId($paymentData['id'])
+            ->setIsClosed(0);
+            $payment->setParentTransactionId(null);
+            $payment->save();
+            $order->save();
+            return  $transaction->save()->getTransactionId();
+        } catch (\Exception $e) {
+            $this->logger->critical($e->getMessage());
+        }
+    }
 }
