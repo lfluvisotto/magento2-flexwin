@@ -3,7 +3,6 @@
 namespace Dibs\Flexwin\Model;
 
 use Magento\Payment\Helper\Data as PaymentHelper;
-use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Payment\Transaction;
 
@@ -42,17 +41,17 @@ class Method
     const KEY_MD5_KEY1_NAME    = 'md5key1';
     const KEY_MD5_KEY2_NAME    = 'md5key2';
     const KEY_CALCFEE_NAME     = 'calcfee';
-    
+
     const RETURN_CONTEXT_ACCEPT   = 'accept';
     const RETURN_CONTEXT_CALLBACK = 'callback';
 
     const API_OPERATION_SUCCESS = 'ACCEPTED';
     const API_OPERATION_FAILURE = 'DECLINED';
-    
+
     const CAPTURE_URL = 'https://payment.architrade.com/cgi-bin/capture.cgi';
     const REFUND_URL_PATTERN = 'https://login:password@payment.architrade.com/cgi-adm/refund.cgi';
     const CANCEL_URL_PATTERN = 'https://login:password@payment.architrade.com/cgi-adm/cancel.cgi';
-    
+
     public function __construct(
         \Magento\Quote\Model\Quote $quote,
         \Magento\Framework\UrlInterface $urlInterface,
@@ -98,7 +97,6 @@ class Method
             $order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
             $this->setCustomOrderStatus('order_status_pending');
             $order->save();
-           
             $requestParams['result'] = 'success';
             $requestParams['params'] = array(
                 self::KEY_MERCHANT_NAME    => trim($this->methodObj->getConfigData(self::KEY_MERCHANT_NAME)),
@@ -213,7 +211,7 @@ class Method
         $orderIncrementId = $this->request->getParam(self::KEY_ORDERID_NAME);
         $order = $this->order->loadByIncrementId($orderIncrementId);
         $transactId = $this->request->getParam('transact');
-        
+
         $this->authorizeTransaction($order, ['id' => $transactId]);
         if ($order->getId()) {
             $order->addStatusHistoryComment($orderComment);
@@ -360,16 +358,6 @@ class Method
             }
     }
 
-    protected function updateTotals(OrderPaymentInterface $payment, $data)
-    {
-        foreach ($data as $key => $amount) {
-            if (null !== $amount) {
-                $was = $payment->getDataUsingMethod($key);
-                $payment->setDataUsingMethod($key, $was + $amount);
-            }
-        }
-    }
-
     protected function shouldMakeInvoice() {
         return (null !== $this->request->getParam('capturenow'))
                 && ($this->request->getParam('capturenow') == 1)
@@ -377,7 +365,7 @@ class Method
                 ? true : false;
     }
 
-    protected function getCurrencyNumber( $code ) {
+    public function getCurrencyNumber( $code ) {
         $aCurrency = array ('ADP' => '020','AED' => 784,'AFA' => '004','ALL' => '008',
                             'AMD' => '051','ANG' => 532,'AOA' => 973,'ARS' => '032',
                             'AUD' => '036','AWG' => 533,'AZM' => '031','BAM' => 977,
@@ -424,7 +412,7 @@ class Method
         );
         return isset($aCurrency[$code]) ? $aCurrency[$code] : 0;
     }
-    
+
     public function authorizeTransaction($order = null, $paymentData = array())
     {
         try {
