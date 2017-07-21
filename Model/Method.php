@@ -365,7 +365,7 @@ class Method
                 ? true : false;
     }
 
-    public function getCurrencyNumber( $code ) {
+    protected function getCurrencyNumber( $code ) {
         $aCurrency = array ('ADP' => '020','AED' => 784,'AFA' => '004','ALL' => '008',
                             'AMD' => '051','ANG' => 532,'AOA' => 973,'ARS' => '032',
                             'AUD' => '036','AWG' => 533,'AZM' => '031','BAM' => 977,
