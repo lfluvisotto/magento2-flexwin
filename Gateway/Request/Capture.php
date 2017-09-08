@@ -11,7 +11,7 @@ class Capture extends Request implements BuilderInterface
     {
         $this->preRequestValidate($buildSubject);
         $merchantId = $this->config->getValue(Method::KEY_MERCHANT_NAME);
-        $amount     = Method::api_dibs_round($this->subjectReader->readAmount($buildSubject));
+        $amount = Method::api_dibs_round($this->subjectReader->readAmount($buildSubject));
         $orderId    = $this->payment->getOrder()->getIncrementId();
         $key1 =  $this->config->getValue('md5key1');
         $key2 =  $this->config->getValue('md5key2');

@@ -62,7 +62,6 @@ define(
                         dataType: 'json'
                     })
                         .done(function (jsonResponse) {
-                            //debugger;
                             if (jsonResponse.result == 'success') {
                                 var requestDataArr = [];
                                 requestData.subscribe(function () {

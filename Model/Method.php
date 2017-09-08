@@ -257,9 +257,6 @@ class Method
             }
         }
         $order = $this->setReturnedParamsToOrder($context);
-        if (!$order->getEmailSent()) {
-            $this->orderSender->send($order);
-        }
         $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
         $this->setCustomOrderStatus('order_status');
         $payment = $order->getPayment();
@@ -267,8 +264,18 @@ class Method
             $invoice = $this->invoiceService->prepareInvoice($order);
             $this->capture($invoice, $payment);
         } 
+        // save fee to order
+        if($this->request->getParam('fee') > 0) {
+            $order->setDibsFee($this->request->getParam('fee'));
+            $order->setBaseDibsFee($this->request->getParam('fee'));
+            $order->setGrandTotal($order->getGrandTotal() + $this->request->getParam('fee') / 100);
+        }
         $order->setIsNotified(false);
         $order->save();
+        if (!$order->getEmailSent()) {
+            $this->orderSender->send($order);
+        }
+
     }
 
     public static function api_dibs_round($fNum, $iPrec = 2)
