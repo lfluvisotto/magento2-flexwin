@@ -57,7 +57,8 @@ define(
                         data: {
                             paytype: method,
                             cartid: quote.getQuoteId(),
-                            orderid: data
+                            orderid: data,
+                            form_key: window.checkoutConfig.payment.dibsFlexwin.form_key
                         },
                         dataType: 'json'
                     })
