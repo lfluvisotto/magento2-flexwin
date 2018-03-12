@@ -150,6 +150,18 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/card_dankort</config_path>
                     </field>
+
+                    <field id="elec" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>VISA Electron:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/card_visa_electron</config_path>
+                    </field>
+
+                    <field id="maestro" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Maestro:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/card_maestro</config_path>
+                    </field>
                 </group>
                 <group id="dibs_flexwin_wallets" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Wallets:</label>
