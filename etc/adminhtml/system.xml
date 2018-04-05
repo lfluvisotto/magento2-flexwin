@@ -9,25 +9,25 @@
                 <group id="dibs_flexwin" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Common gateway settings</label>
 
-                    <field id="merchant" translate="label comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="merchant" translate="label comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Merchantid:</label>
                         <comment>Shop identification. The Merchant ID appears in the e-mail received from DIBS during registration with DIBS or on your contract.</comment>
                         <config_path>payment/dibs_flexwin/merchant</config_path>
                     </field>
 
-                    <field id="api_user" translate="label comment" type="password" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="api_user" translate="label comment" type="password" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Api user:</label>
                         <comment>Api user</comment>
                         <config_path>payment/dibs_flexwin/api_user</config_path>
                     </field>
 
-                    <field id="api_password" translate="label comment" type="password" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="api_password" translate="label comment" type="password" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Api password:</label>
                         <comment>Api password</comment>
                         <config_path>payment/dibs_flexwin/api_password</config_path>
                     </field>
                 
-                    <field id="test" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="test" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Testmode:</label>
                         <comment>When this field is declared, the transaction is not dispatched to the card issuer,
                             but is instead handled by the DIBS test environment. When the shop goes live, the test system is normally disabled,
@@ -36,7 +36,7 @@
                         <config_path>payment/dibs_flexwin/testmode</config_path>
                     </field>
 
-                    <field id="calcfee" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="calcfee" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Calcfee: </label>
                         <comment>If this parameter is sent with the value "yes", the charge from the acquirer due to the
                             transaction will automatically be calculated and affixed.</comment>
@@ -44,7 +44,7 @@
                         <config_path>payment/dibs_flexwin/calcfee</config_path>
                     </field>
 
-                    <field id="capturenow" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="capturenow" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Capturenow:</label>
                         <comment>If this field exists, a capture request is automatically carried out after the authorization,
                             following the normal capture process of the specific acquirer.</comment>
@@ -52,7 +52,7 @@
                         <config_path>payment/dibs_flexwin/capturenow</config_path>
                     </field>
                     
-                    <field id="makeinvoice" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="makeinvoice" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Create invoice:</label>
                         <comment>If set invoice will be created automatically if Capturenow is set.</comment>
                         <backend_model>Dibs\Flexwin\Model\Config\Backend\Makeinvoice</backend_model>
@@ -60,13 +60,13 @@
                         <config_path>payment/dibs_flexwin/makeinvoice</config_path>
                     </field>
 
-                    <field id="active" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="active" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Enabled</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/active</config_path>
                     </field>
 
-                    <field id="decorator" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="decorator" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Decorator:</label>
                         <comment>Specifies which of the pre-built decorators to use.
                             Possible values are "default", "basal", "rich" and "responsive"
@@ -84,33 +84,33 @@
                         <config_path>payment/dibs_flexwin/lang</config_path>
                     </field>
 
-                    <field id="md5key1" translate="label comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="md5key1" translate="label comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>md5 Key1</label>
                         <comment>md5 Key1</comment>
                         <config_path>payment/dibs_flexwin/md5key1</config_path>
                     </field>
 
-                    <field id="md5key2" translate="label comment" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="md5key2" translate="label comment" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>md5 Key2</label>
                         <comment>md5 Key2</comment>
                         <config_path>payment/dibs_flexwin/md5key2</config_path>
                     </field>
 
-                    <field id="order_status" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="order_status" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Order Status After Payment:</label>
                         <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>
                         <config_path>payment/dibs_flexwin/order_status</config_path>
                         <comment>Order sattus after payment</comment>
                     </field>
 
-                    <field id="order_status_pending" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="order_status_pending" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Order Status Pending Payment:</label>
                         <source_model>Dibs\Flexwin\Model\Config\Source\Pending</source_model>
                         <config_path>payment/dibs_flexwin/order_status_pending</config_path>
                         <comment>Order satus before is redirected to DIBS</comment>
                     </field>
 
-                    <field id="order_status_cancel" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="order_status_cancel" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Order Status Cancelled:</label>
                         <source_model>Dibs\Flexwin\Model\Config\Source\Cancel</source_model>
                         <config_path>payment/dibs_flexwin/order_status_cancel</config_path>
@@ -121,43 +121,43 @@
                 <group id="dibs_flexwin_cards" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Cards:</label>
 
-                    <field id="visa" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="visa" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Visa:</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/card_visa</config_path>
                     </field>
 
-                    <field id="master" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="master" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Master:</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/card_master</config_path>
                     </field>
 
-                    <field id="amex" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="amex" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Amex:</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/card_amex</config_path>
                     </field>
 
-                    <field id="diners" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="diners" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Diners:</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/card_diners</config_path>
                     </field>
 
-                    <field id="dankort" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="dankort" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Dankort:</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/card_dankort</config_path>
                     </field>
 
-                    <field id="elec" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="elec" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>VISA Electron:</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/card_visa_electron</config_path>
                     </field>
 
-                    <field id="maestro" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="maestro" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Maestro:</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/card_maestro</config_path>
@@ -165,7 +165,7 @@
                 </group>
                 <group id="dibs_flexwin_wallets" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Wallets:</label>
-                    <field id="mobilepay" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="mobilepay" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>MobilePay:</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/mobilepay</config_path>
@@ -173,22 +173,22 @@
                 </group>
                 <group id="dibs_flexwin_directbank" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Directbanks:</label>
-                    <field id="swedbank" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="swedbank" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Swedbank:</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/swedbank</config_path>
                     </field>
-                    <field id="seb" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="seb" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>SEB Bank:</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/seb</config_path>
                     </field>
-                    <field id="paypal" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="paypal" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Paypal:</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/paypal</config_path>
                     </field>
-                    <field id="nordea" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="nordea" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Nordea Solo-E betaling (Sweden):</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/nordea</config_path>

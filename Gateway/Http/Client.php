@@ -50,7 +50,6 @@ class Client implements ClientInterface
                    throw new \Magento\Framework\Exception\LocalizedException(__($msg));
                }
                $body = $this->curlClient->getBody();
-               
                $match = [];
                preg_match('/status=(.*?)&/', $body, $match);
                $status = $match[1];
