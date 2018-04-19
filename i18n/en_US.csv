@@ -21,3 +21,5 @@
 "Swedbank", "Swedbank"
 "Credit card", "Credit card"
 "Dibs fee", "Dibs fee"
+"Missing orderid", "DIBS Payment was not processed in Magento. Missing OrderId parameter. OrderId must be checked in Metaadmin Integration->Return Values"
+"mac code error", "DIBS mac code error"

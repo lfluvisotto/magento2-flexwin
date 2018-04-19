@@ -48,7 +48,7 @@ class Method
     const API_OPERATION_SUCCESS = 'ACCEPTED';
     const API_OPERATION_FAILURE = 'DECLINED';
 
-    const CAPTURE_URL = 'https://payment.architrade.com/cgi-bin/capture.cgi';
+    const CAPTURE_URL        = 'https://payment.architrade.com/cgi-bin/capture.cgi';
     const REFUND_URL_PATTERN = 'https://login:password@payment.architrade.com/cgi-adm/refund.cgi';
     const CANCEL_URL_PATTERN = 'https://login:password@payment.architrade.com/cgi-adm/cancel.cgi';
 
@@ -251,8 +251,7 @@ class Method
                 self::KEY_MD5KEY_NAME   => $this->request->getParam(self::KEY_MD5KEY_NAME),
             );
             if (!$this->checkMacCode($returnedParams)) {
-                // add logging of fail mac code
-
+                 $this->logger->alert('mac code error');
                 return;
             }
         }

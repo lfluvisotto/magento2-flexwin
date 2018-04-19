@@ -13,8 +13,9 @@ class Request extends \Dibs\Flexwin\Controller\Index
                                 \Magento\Quote\Model\Quote $quote,
                                 \Magento\Checkout\Model\Session $checkoutSession,
                                 \Dibs\Flexwin\Model\Method $method,
-                                \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator) {
-        parent::__construct($context, $order, $quote, $checkoutSession, $method);
+                                \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
+                                \Psr\Log\LoggerInterface $logger) {
+        parent::__construct($context, $order, $quote, $checkoutSession, $method, $logger);
         $this->formKeyValidator = $formKeyValidator;
     }
 
