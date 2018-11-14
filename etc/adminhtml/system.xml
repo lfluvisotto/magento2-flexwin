@@ -170,6 +170,11 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/mobilepay</config_path>
                     </field>
+                    <field id="dkw" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>DKW</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/dkw</config_path>
+                    </field>
                 </group>
                 <group id="dibs_flexwin_directbank" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Directbanks:</label>
