@@ -351,7 +351,7 @@ class Method
 
     protected function capture($invoice, $payment) {
          try {
-                $invoice->setRequestedCaptureCase(Invoice::CAPTURE_ONLINE);
+                $invoice->setRequestedCaptureCase(Invoice::CAPTURE_OFFLINE);
                 $invoice->setTransactionId($payment->getLastTransId());
                 $invoice->register();
                 $transactionSave = $this->_objectManager->create(
@@ -451,7 +451,10 @@ class Method
                 $message
             );
             $transaction->setParentTxnId($paymentData['id'])
-            ->setIsClosed(0);
+            ->setIsClosed(0); 
+            if($this->shouldMakeInvoice()){
+                $transaction->setIsClosed(1);
+            }
             $payment->setParentTransactionId(null);
             $payment->save();
             $order->save();
