@@ -106,7 +106,9 @@ class Method
                 self::KEY_ACCEPTURL_NAME   => $this->urlInterface->getDirectUrl('dibsflexwin/index/accept'),
                 self::KEY_CANCELURL_NAME   => $this->urlInterface->getDirectUrl('dibsflexwin/index/cancel'),
                 self::KEY_PAYTYPE_NAME     => $this->request->getParam(self::KEY_PAYTYPE_NAME),
-                self::KEY_CALLBACKURL_NAME => $this->urlInterface->getDirectUrl('dibsflexwin/index/callback')
+                // https://github.com/magento/magento2/commit/b475068f894b95674454cc08dc327a45d218a72f
+                // compatibility with version 2.3 and backward compatibility
+                self::KEY_CALLBACKURL_NAME => $this->urlInterface->getDirectUrl('dibsflexwin/index/callback/ajax/1')
             );
             if ($this->methodObj->getConfigData(self::KEY_TESTMODE_NAME) == 1) {
                 $requestParams['params']['test'] = 1;
