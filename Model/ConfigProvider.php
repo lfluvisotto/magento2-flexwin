@@ -2,37 +2,43 @@
 
 namespace Dibs\Flexwin\Model;
 
-use Magento\Framework\Escaper;
 use Magento\Payment\Helper\Data as PaymentHelper;
 
 class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
 {
-    protected $method;
-    protected $urlInterface;
-    protected $assetRepo;
-    protected $formKey;
     const METHOD_CODE = 'dibs_flexwin';
 
-    /**
-     * @var Escaper
+    /*
+     * @var \Dibs\Flexwin\Model\Method
      */
-    protected $escaper;
+    protected $method;
+
+    /*
+     * @var \Magento\Framework\UrlInterface
+     */
+    protected $urlInterface;
+
+    /*
+     * @var \Magento\Framework\View\Asset\Repository
+     */
+    protected $assetRepo;
 
     public function __construct(
         PaymentHelper $paymentHelper,
-        Escaper $escaper,
         \Magento\Framework\UrlInterface $urlInterface,
-        \Magento\Framework\View\Asset\Repository $assetRepo,
-        \Magento\Framework\Data\Form\FormKey $formKey
+        \Magento\Framework\View\Asset\Repository $assetRepo
 
     ) {
-        $this->escaper = $escaper;
         $this->method = $paymentHelper->getMethodInstance(self::METHOD_CODE);
         $this->urlInterface = $urlInterface;
         $this->assetRepo = $assetRepo;
-        $this->formKey = $formKey;
     }
 
+    /**
+     * Retrieve assoc array of checkout configuration
+     *
+     * @return array
+     */
     public function getConfig()
     {
         $config = [
@@ -113,17 +119,11 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
                         'getPlaceOrderUrl' => $this->urlInterface->getDirectUrl($this->method->getConfigData('place_order_url')),
                         'formActionUrl'    => $this->method->getConfigData('form_action_url'),
                         'logoWith'         => $this->method->getConfigData('logo_with'),
-                        'test'             => $this->method->getConfigData('testmode'),
-                        'form_key'         => $this->formKey->getFormKey()
+                        'test'             => $this->method->getConfigData('testmode')
                 ]
             ]
         ];
         return $config;
-    }
-
-    public function getCards()
-    {
-        return $this->method->isCardsActive();
     }
 
     protected function getLogo($imgName) {

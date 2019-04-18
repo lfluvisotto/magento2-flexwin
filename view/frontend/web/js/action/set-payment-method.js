@@ -58,7 +58,7 @@ define(
                             paytype: method,
                             cartid: quote.getQuoteId(),
                             orderid: data,
-                            form_key: window.checkoutConfig.payment.dibsFlexwin.form_key
+                            form_key: $.mage.cookies.get('form_key')
                         },
                         dataType: 'json'
                     })
