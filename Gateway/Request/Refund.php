@@ -5,7 +5,6 @@ namespace Dibs\Flexwin\Gateway\Request;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use Dibs\Flexwin\Model\Method;
 
-
 class Refund extends Request implements BuilderInterface 
 {
     public function build(array $buildSubject) {

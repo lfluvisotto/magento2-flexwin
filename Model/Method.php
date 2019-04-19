@@ -4,81 +4,112 @@ namespace Dibs\Flexwin\Model;
 
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Sales\Model\Order\Invoice;
-use Magento\Sales\Model\Order\Payment\Transaction;
 
-class Method
+class Method implements \Dibs\Flexwin\Model\MethodConfig
 {
-    protected $quote;
+    /**
+     *
+     * @var \Magento\Quote\Model\QuoteFactory
+     */
+    protected $quoteFactory;
+
+    /**
+     *
+     * @var \Magento\Framework\UrlInterface
+     */
     protected $urlInterface;
+
+    /**
+     *
+     * @var \Magento\Payment\Helper\Data
+     */
     protected $paymentHelper;
+
+    /**
+     *
+     * @var \Magento\Checkout\Model\Session
+     */
     protected $_checkoutSession;
-    protected $_quote = false;
+
+    /**
+     *
+     * @var Magento\Payment\Model\MethodInterface
+     */
     protected $methodObj;
+
+    /**
+     *
+     * @var \Magento\Framework\App\Request\Http
+     */
     protected $request;
-    protected $order;
+
+    /**
+     *
+     * @var \Magento\Sales\Model\OrderFactory
+     */
+    protected $orderFactory;
+
+    /**
+     *
+     * @var \Magento\Sales\Model\Order\Email\Sender\OrderSender
+     */
     protected $orderSender;
+
+    /**
+     *
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
     protected $scopeConfig;
+
+    /**
+     *
+     * @var \Magento\Sales\Model\Service\InvoiceService
+     */
     protected $invoiceService;
+
+    /**
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
     protected $_objectManager;
-    protected $registry;
-    protected $transaction;
+
+    /**
+     *
+     * @var \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface
+     */
     protected $_transactionBuilder;
+
+    /**
+     *
+     * @var \Psr\Log\LoggerInterface
+     */
     protected $logger;
 
-    const KEY_CURRENCY_NAME    = 'currency';
-    const KEY_MERCHANT_NAME    = 'merchant';
-    const KEY_AMOUNT_NAME      = 'amount';
-    const KEY_ACCEPTURL_NAME   = 'accepturl';
-    const KEY_CANCELURL_NAME   = 'cancelurl';
-    const KEY_PAYTYPE_NAME     = 'paytype';
-    const KEY_CALLBACKURL_NAME = 'callbackurl';
-    const KEY_ORDERID_NAME     = 'orderid';
-    const KEY_DECORATOR_NAME   = 'decorator';
-    const KEY_LANG_NAME        = 'lang';
-    const KEY_TESTMODE_NAME    = 'testmode';
-    const KEY_MD5KEY_NAME      = 'md5key';
-    const KEY_CAPTURENOW_NAME  = 'capturenow';
-    const KEY_MD5_KEY1_NAME    = 'md5key1';
-    const KEY_MD5_KEY2_NAME    = 'md5key2';
-    const KEY_CALCFEE_NAME     = 'calcfee';
-
-    const RETURN_CONTEXT_ACCEPT   = 'accept';
-    const RETURN_CONTEXT_CALLBACK = 'callback';
-
-    const API_OPERATION_SUCCESS = 'ACCEPTED';
-    const API_OPERATION_FAILURE = 'DECLINED';
-
-    const CAPTURE_URL        = 'https://payment.architrade.com/cgi-bin/capture.cgi';
-    const REFUND_URL_PATTERN = 'https://login:password@payment.architrade.com/cgi-adm/refund.cgi';
-    const CANCEL_URL_PATTERN = 'https://login:password@payment.architrade.com/cgi-adm/cancel.cgi';
-
     public function __construct(
-        \Magento\Quote\Model\Quote $quote,
+        \Magento\Quote\Model\QuoteFactory $quoteFactory,
         \Magento\Framework\UrlInterface $urlInterface,
         PaymentHelper $paymentHelper,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Framework\App\Request\Http $request,
-        \Magento\Sales\Model\Order $order,
+        \Magento\Sales\Model\OrderFactory $orderFactory,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Sales\Model\Service\InvoiceService $invoiceService,
         \Magento\Framework\ObjectManagerInterface $_objectManager,
-        Transaction $transaction,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Psr\Log\LoggerInterface $logger
     ) {
-        $this->quote = $quote;
+        $this->quoteFactory = $quoteFactory;
         $this->urlInterface = $urlInterface;
         $this->paymentHelper = $paymentHelper;
         $this->_checkoutSession = $checkoutSession;
         $this->methodObj = $this->paymentHelper->getMethodInstance(ConfigProvider::METHOD_CODE);
         $this->request = $request;
-        $this->order = $order;
+        $this->orderFactory = $orderFactory;
         $this->orderSender = $orderSender;
         $this->scopeConfig = $scopeConfig;
         $this->invoiceService = $invoiceService;
         $this->_objectManager = $_objectManager;
-        $this->transaction = $transaction;
         $this->_transactionBuilder = $transactionBuilder;
         $this->logger = $logger;
     }
@@ -91,11 +122,11 @@ class Method
      */
     public function collectRequestParams()
     {
-        $order = $this->order->load($this->request->getParam(self::KEY_ORDERID_NAME));
+        $order = $this->orderFactory->create()->load($this->request->getParam(self::KEY_ORDERID_NAME));
         if ($order->getId()) {
             $orderId = $order->getIncrementId();
             $order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
-            $this->setCustomOrderStatus('order_status_pending');
+            $this->setCustomOrderStatus('order_status_pending', $order);
             $order->save();
             $requestParams['result'] = 'success';
             $requestParams['params'] = array(
@@ -151,8 +182,8 @@ class Method
 
             // Shipping info
             $shippigAddress = $order->getShippingAddress();
-            // Virtual products don't have shipping address		
-            if($shippigAddress) {  
+            // Virtual products doesn't have shipping address
+            if($shippigAddress) {
             	$requestParams['params']['delivery11.Delivery'] = 'Shipping Address';
             	$requestParams['params']['delivery12.Firstname'] = $shippigAddress->getFirstname();
             	$requestParams['params']['delivery13.Lastname'] = $shippigAddress->getLastname();
@@ -164,6 +195,9 @@ class Method
             	$requestParams['params']['delivery19.Telephone'] = $shippigAddress->getTelephone();
             	$requestParams['params']['delivery10.E-mail'] = $shippigAddress->getEmail();
 	    }
+
+            $requestParams['params']['x_protect_code'] = $order->getProtectCode();
+
         } else {
             $requestParams['result'] = 'error';
             $requestParams['message'] = 'error occured';
@@ -174,13 +208,13 @@ class Method
     /**
      * Calculate md5key from given params
      *
-     * @param type $params
+     * @param array $params
      *
-     * @return String
+     * @return string|null
      */
-    protected function calcMd5Code($params)
+    protected function calcMd5Code(array $params)
     {
-        $md5key = '';
+        $md5key = null;
         if ($this->checkMd5KeyCodeRequired()) {
             $key1 = trim($this->methodObj->getConfigData(self::KEY_MD5_KEY1_NAME));
             $key2 = trim($this->methodObj->getConfigData(self::KEY_MD5_KEY2_NAME));
@@ -199,10 +233,9 @@ class Method
      * success return and callback, add
      * comment for order for successreturn/callback cases
      *
+     * @param string $context
      *
-     * @param type $context
-     *
-     * @return $order
+     * @return \Magento\Sales\Model\Order $order
      */
     protected function setReturnedParamsToOrder($context = self::RETURN_CONTEXT_ACCEPT)
     {
@@ -214,7 +247,7 @@ class Method
             $orderComment = __('Callback was received from DIBS');
         }
         $orderIncrementId = $this->request->getParam(self::KEY_ORDERID_NAME);
-        $order = $this->order->loadByIncrementId($orderIncrementId);
+        $order = $this->orderFactory->create()->loadByIncrementId($orderIncrementId);
         $transactId = $this->request->getParam('transact');
 
         $this->authorizeTransaction($order, ['id' => $transactId]);
@@ -262,18 +295,18 @@ class Method
         }
         $order = $this->setReturnedParamsToOrder($context);
         $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
-        $this->setCustomOrderStatus('order_status');
+        $this->setCustomOrderStatus('order_status', $order);
         $payment = $order->getPayment();
-        if($this->shouldMakeInvoice() && $order->canInvoice()) {
-            $invoice = $this->invoiceService->prepareInvoice($order);
-            $this->capture($invoice, $payment);
-        } 
         // save fee to order
         if($this->request->getParam('fee') > 0) {
             $order->setDibsFee($this->request->getParam('fee'));
             $order->setBaseDibsFee($this->request->getParam('fee'));
             $order->setGrandTotal($order->getGrandTotal() + $this->request->getParam('fee') / 100);
         }
+        if($this->shouldMakeInvoice() && $order->canInvoice()) {
+            $invoice = $this->invoiceService->prepareInvoice($order);
+            $this->capture($invoice, $payment);
+        } 
         $order->setIsNotified(false);
         $order->save();
         if (!$order->getEmailSent()) {
@@ -298,26 +331,33 @@ class Method
      */
     protected function checkMacCode(array $returnedParams)
     {
-       return ($this->calcMd5Code($returnedParams) ==
-               $returnedParams[self::KEY_MD5KEY_NAME]) ? true : false;
+       return $this->calcMd5Code($returnedParams) == $returnedParams[self::KEY_MD5KEY_NAME];
     }
 
-    public function setOrderCancelled($orderid)
+    /**
+     *
+     * @param string $incrementId
+     */
+    public function setOrderCancelled($incrementId)
     {
-        $order = $this->order->loadByIncrementId($orderid);
+        $order = $this->orderFactory->create()->loadByIncrementId($incrementId);
         if ($order->getId()) {
             $order->cancel();
-            $this->setCustomOrderStatus('order_status_cancel');
+            $this->setCustomOrderStatus('order_status_cancel', $order);
             $order->addStatusHistoryComment(__('Customer has cancelled payment'));
             $order->save();
         }
     }
 
-    public function restoreQuoteFromOrder($orderid)
+    /**
+     *
+     * @param string $incrementId
+     */
+    public function restoreQuoteFromOrder($incrementId)
     {
-        $order = $this->order->loadByIncrementId($orderid);
+        $order = $this->orderFactory->create()->loadByIncrementId($incrementId);
         if ($order->getId()) {
-            $quote = $this->quote->loadByIdWithoutStore($order->getQuoteId());
+            $quote = $this->quoteFactory->create()->loadByIdWithoutStore($order->getQuoteId());
             $quote->setIsActive(1)->setReservedOrderId(null)->save();
             $this->_checkoutSession->replaceQuote($quote);
         }
@@ -331,8 +371,8 @@ class Method
      */
     protected function checkMd5KeyCodeRequired()
     {
-        return trim($this->methodObj->getConfigData(self::KEY_MD5_KEY1_NAME)) &&
-        trim($this->methodObj->getConfigData(self::KEY_MD5_KEY2_NAME)) ? true : false;
+        return trim($this->methodObj->getConfigData(self::KEY_MD5_KEY1_NAME))
+               && trim($this->methodObj->getConfigData(self::KEY_MD5_KEY2_NAME));
     }
 
     /**
@@ -343,15 +383,15 @@ class Method
      *
      * @return type
      */
-    protected function setCustomOrderStatus($statusConfName)
+    protected function setCustomOrderStatus($statusConfName, \Magento\Sales\Model\Order $order)
     {
         $orderStatus = $this->methodObj->getConfigData($statusConfName);
         if ($orderStatus) {
-            $this->order->setStatus($orderStatus);
+            $order->setStatus($orderStatus);
         }
     }
 
-    protected function capture($invoice, $payment) {
+    protected function capture(\Magento\Sales\Model\Order\Invoice $invoice, $payment) {
          try {
                 $invoice->setRequestedCaptureCase(Invoice::CAPTURE_OFFLINE);
                 $invoice->setTransactionId($payment->getLastTransId());
@@ -372,11 +412,10 @@ class Method
     protected function shouldMakeInvoice() {
         return (null !== $this->request->getParam('capturenow'))
                 && ($this->request->getParam('capturenow') == 1)
-                && ($this->methodObj->getConfigData('makeinvoice') == 1)
-                ? true : false;
+                && ($this->methodObj->getConfigData('makeinvoice') == 1);
     }
 
-    protected function getCurrencyNumber( $code ) {
+    protected function getCurrencyNumber($code) {
         $aCurrency = array ('ADP' => '020','AED' => 784,'AFA' => '004','ALL' => '008',
                             'AMD' => '051','ANG' => 532,'AOA' => 973,'ARS' => '032',
                             'AUD' => '036','AWG' => 533,'AZM' => '031','BAM' => 977,
@@ -424,7 +463,7 @@ class Method
         return isset($aCurrency[$code]) ? $aCurrency[$code] : 0;
     }
 
-    public function authorizeTransaction($order = null, $paymentData = array())
+    public function authorizeTransaction(\Magento\Sales\Model\Order $order, array $paymentData)
     {
         try {
             //get payment object from order object
@@ -435,7 +474,7 @@ class Method
                 [\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS => (array) $paymentData]
             );
             $formatedPrice = $order->getBaseCurrency()->formatTxt(
-                $order->getGrandTotal()
+                $order->getGrandTotal() + $this->request->getParam('fee') / 100
             );
             $message = __('The authorized amount is %1.', $formatedPrice);
             //get the object of builder class
@@ -464,5 +503,18 @@ class Method
         } catch (\Exception $e) {
             $this->logger->critical($e->getMessage());
         }
+    }
+
+    /**
+     * Compare returned order protect_code with current order protect code
+     *
+     * @param string $incrementId
+     * @param string $protectCode
+     * @return bool
+     */
+    public function checkProtectCode($incrementId, $protectCode)
+    {
+        $order = $this->orderFactory->create()->loadByIncrementId($incrementId);
+        return $order->getProtectCode() == $protectCode ? true: false;
     }
 }

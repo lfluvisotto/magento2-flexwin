@@ -6,7 +6,7 @@ class Callback extends \Dibs\Flexwin\Controller\Index
 {
     public function execute()
     {
-        if ($this->checkPost()) {
+        if ($this->checkPost() && $this->checkProtectCode()) {
             $this->method->completeCheckout('callback');
         }
     }

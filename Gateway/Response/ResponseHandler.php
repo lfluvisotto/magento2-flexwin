@@ -3,11 +3,14 @@
 namespace Dibs\Flexwin\Gateway\Response;
 
 use Magento\Framework\Message\ManagerInterface;
-use Magento\Payment\Gateway\Data\PaymentDataObject;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 
 class ResponseHandler {
 
+    /**
+     *
+     * @var \Magento\Framework\Message\ManagerInterface
+     */
     protected $message;
 
     public function __construct(ManagerInterface $message) {

@@ -8,17 +8,41 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Payment\Helper\Data as PaymentHelper;
 
-
 class Request {
 
     /**
     * @var ConfigInterface
     */
     protected $config;
+
+    /**
+     *
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
     protected $storeManager;
+
+    /**
+     *
+     * @var \Magento\Payment\Helper\Data
+     */
     protected $payment;
+
+    /**
+     *
+     * @var \Dibs\Flexwin\Model\Method
+     */
     protected $method;
+
+    /**
+     *
+     * @var type
+     */
     protected $paymentHelper;
+
+    /**
+     *
+     * @var \Magento\Payment\Gateway\Helper\SubjectReader
+     */
     protected $subjectReader;
 
     /**
@@ -53,8 +77,8 @@ class Request {
     }
 
     /**
-     * Convert amount in base currency to 
-     * amount in current currency 
+     * Convert amount in base currency to
+     * amount in current currency
      *  
      * @param type $amount
      * @return type
