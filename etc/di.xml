@@ -101,7 +101,7 @@
             <argument name="configInterface" xsi:type="object">DibsFlexwinConfig</argument>
         </arguments>
     </virtualType>
-    <type name="Magento\Framework\Data\Form\FormKey\Validator">
-	<plugin name="dibs_flexwin_validator" type="Dibs\Flexwin\Plugin\Data\Form\FormKey\Validator" sortOrder="1" />
+    <type name="Magento\Framework\App\Request\CsrfValidator">
+        <plugin name="dibs_flexwin_csrf_validator_skip" type="Dibs\Flexwin\Plugin\CsrfValidatorSkip" />
     </type>
 </config>
