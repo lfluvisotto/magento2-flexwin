@@ -122,7 +122,11 @@ class Method implements \Dibs\Flexwin\Model\MethodConfig
      */
     public function collectRequestParams()
     {
-        $order = $this->orderFactory->create()->load($this->request->getParam(self::KEY_ORDERID_NAME));
+
+        $checkoutOnepageSession = $this->_objectManager->get(\Magento\Checkout\Model\Type\Onepage::class)->getCheckout();
+        $orderId = $checkoutOnepageSession->getLastOrderId();
+        $order = $this->_objectManager->create('\Magento\Sales\Model\Order')->load($orderId);
+
         if ($order->getId()) {
             $orderId = $order->getIncrementId();
             $order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);

@@ -1,0 +1,15 @@
+Redirecting to DIBS Payment Window...
+<?php
+   $params = $block->getRequestParams();
+   $params = $params['params'];
+?>    
+<form id="dibsForm" method="POST" action="https://payment.architrade.com/paymentweb/start.action">
+     <?php foreach($params as $key => $value): ?>   
+       <?php if(!is_array($value)): ?>
+           <?= '<input type="hidden" name="' . $key . '" value="' . $value. '">' ?>
+        <?php endif; ?>
+      <?php endforeach; ?>  
+</form>
+<script type="text/javascript"> 
+     document.getElementById("dibsForm").submit();
+</script>  

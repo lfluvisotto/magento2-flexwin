@@ -3,16 +3,15 @@
 define(
     [
         'Magento_Checkout/js/view/payment/default',
-        'Dibs_Flexwin/js/action/set-payment-method',
         'Magento_Checkout/js/action/select-payment-method',
         'Magento_Checkout/js/checkout-data',
         'Magento_Customer/js/customer-data',
         'ko',
         'jquery',
-        'Magento_Checkout/js/model/payment/additional-validators'
+        'mage/url'
     ],
-    function (Component, setPaymentMethodAction, selectPaymentMethodAction,
-              checkoutData, storage, ko, $, additionalValidators) {
+    function (Component, selectPaymentMethodAction,
+              checkoutData, storage, ko, $, url) {
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,
@@ -48,16 +47,14 @@ define(
                 return this;
             },
 
-            placeOrder: function () {
-                var self = this;
+            afterPlaceOrder: function() {
+                console.log( storage.get('checkout-data'));
                 var obj = storage.get('checkout-data');
-                if (self.validate() && additionalValidators.validate() ) {
-                    self.selectPaymentMethod();
-                    setPaymentMethodAction(this.messageContainer, self.requestData,
-                        _.find(this.getEnabledPaytypes(), function (card) {
+                var paytypeT = _.find(this.getEnabledPaytypes(), function (card) {
                             return card.id == obj.paytypeId;
-                        }).paytype);
-                }
+                }).paytype;
+                var urlredirect = url.build("dibsflexwin/index/request") + '?paytype=' + paytypeT;
+                window.location.replace(urlredirect);
             },
 
             getData: function () {
@@ -78,7 +75,6 @@ define(
                     po_number: null,
                     additional_data: null
                 });
-                checkoutData.setSelectedPaymentMethod(event.target.id);
                 var obj = storage.get('checkout-data');
                 obj.paytypeId = event.target.id;
                 this.getDibsPaytype(obj.paytypeId);
