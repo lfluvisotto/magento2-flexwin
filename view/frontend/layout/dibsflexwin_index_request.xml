@@ -9,7 +9,7 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="content">
-           <block class="Dibs\Flexwin\Block\Redirect" template="Dibs_Flexwin::form.phtml"/>
+           <block class="Dibs\Flexwin\Block\Redirect" template="Dibs_Flexwin::form.phtml" cacheable="false"/>
         </referenceContainer>
     </body>
 </page>
