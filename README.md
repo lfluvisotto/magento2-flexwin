@@ -1,7 +1,7 @@
 dibs/module-payment-flexwin
 ======================
 
-Dibs Flexwin module for Magento 2 for D2 merchants
+Nets Flexwin module for Magento 2 for D2 merchants
 
 
 Install
