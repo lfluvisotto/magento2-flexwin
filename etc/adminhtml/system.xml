@@ -3,7 +3,7 @@
     <system>
         <section id="payment">
             <group id="dibs_flexwin_all" translate="label" type="text" sortOrder="255" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Dibs Flexwin</label>
+                <label>Nets Flexwin</label>
                 <comment><![CDATA[]]></comment>
                 <attribute type="expanded">1</attribute>
                 <group id="dibs_flexwin" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -11,7 +11,7 @@
 
                     <field id="merchant" translate="label comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Merchantid:</label>
-                        <comment>Shop identification. The Merchant ID appears in the e-mail received from DIBS during registration with DIBS or on your contract.</comment>
+                        <comment>Shop identification. The Merchant ID appears in the e-mail received from NETS during registration with NETS or on your contract.</comment>
                         <config_path>payment/dibs_flexwin/merchant</config_path>
                     </field>
 
@@ -30,8 +30,8 @@
                     <field id="test" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Testmode:</label>
                         <comment>When this field is declared, the transaction is not dispatched to the card issuer,
-                            but is instead handled by the DIBS test environment. When the shop goes live, the test system is normally disabled,
-                            and should the shop want to use the test mode at a later date the DIBS support can be contacted for reactivation.</comment>
+                            but is instead handled by the NETS test environment. When the shop goes live, the test system is normally disabled,
+                            and should the shop want to use the test mode at a later date the NETS support can be contacted for reactivation.</comment>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/dibs_flexwin/testmode</config_path>
                     </field>
@@ -70,9 +70,9 @@
                         <label>Decorator:</label>
                         <comment>Specifies which of the pre-built decorators to use.
                             Possible values are "default", "basal", "rich" and "responsive"
-                            ("Responsive" results in a new design created by DIBS,
+                            ("Responsive" results in a new design created by NETS,
                             which makes the payment window scale automatically to various devices
-                            and screen sizes. You must set icons to Large in your DIBS Admin).</comment>
+                            and screen sizes. You must set icons to Large in your NETS Admin).</comment>
                         <source_model>Dibs\Flexwin\Model\Config\Source\Decorator</source_model>
                         <config_path>payment/dibs_flexwin/decorator</config_path>
                     </field>
@@ -107,7 +107,7 @@
                         <label>Order Status Pending Payment:</label>
                         <source_model>Dibs\Flexwin\Model\Config\Source\Pending</source_model>
                         <config_path>payment/dibs_flexwin/order_status_pending</config_path>
-                        <comment>Order satus before is redirected to DIBS</comment>
+                        <comment>Order satus before is redirected to NETS</comment>
                     </field>
 
                     <field id="order_status_cancel" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
