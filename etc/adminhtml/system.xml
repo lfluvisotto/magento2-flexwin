@@ -133,6 +133,30 @@
                         <config_path>payment/dibs_flexwin/card_master</config_path>
                     </field>
 
+                    <field id="visa_debit" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Visa debit:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/card_visa_debit</config_path>
+                    </field>
+
+                    <field id="master_debit" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Master debit:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/card_master_debit</config_path>
+                    </field>
+
+                    <field id="visa_credit" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Visa credit:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/card_visa_credit</config_path>
+                    </field>
+
+                    <field id="master_credit" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Master credit:</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/dibs_flexwin/card_master_credit</config_path>
+                    </field>
+
                     <field id="amex" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Amex:</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
