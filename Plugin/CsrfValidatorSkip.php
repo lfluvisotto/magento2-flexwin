@@ -14,7 +14,7 @@ class CsrfValidatorSkip {
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\App\ActionInterface $action
     ) {
-        if ('dibsflexwin' == $request->getModuleName() && in_array($request->getActionName(), ['callback', 'cancel'])) {
+        if ('dibsflexwin' == $request->getModuleName() && in_array($request->getActionName(), ['callback', 'cancel', 'accept'])) {
             return;
         }
         $proceed($request, $action);
